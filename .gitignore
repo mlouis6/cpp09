@@ -1,0 +1,11 @@
+*.out
+.vscode
+*.log
+*.o
+*.d
+*.txt
+# *.md
+.build/
+btc
+RPN
+PmergeMe
