@@ -147,11 +147,17 @@ int	RPN::calculate(char* args)
 					err = true;
 					return 1;
 				}
-				m_nbs.push(atoi(&args[i]));
+				int nb = atoi(&args[i]);
+				if (nb < 0 || nb > 9)
+				{
+					err = true;
+					return 1;
+				}
+				m_nbs.push(nb);
 		}
 		i++;
 	}
-	return static_cast<int> (res);
+	return static_cast<int> (m_nbs.top());
 }
 
 // TODO: check overflow / underflow
