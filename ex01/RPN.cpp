@@ -51,7 +51,7 @@ int	RPN::calculate(char* args)
 			case '+':
 				if (m_nbs.size() < 2)
 				{
-					std::cerr << "Error" << std::endl;
+					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
