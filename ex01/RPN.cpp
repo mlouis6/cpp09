@@ -157,6 +157,8 @@ int	RPN::calculate(char* args)
 		}
 		i++;
 	}
+	if (m_nbs.size() > 1)
+		err = true;
 	return static_cast<int> (m_nbs.top());
 }
 
