@@ -4,7 +4,7 @@ NAME := RPN
 
 OBJS_DIR := .build/
 
-SRCS := main.cpp
+SRCS := main.cpp RPN.cpp
 INCS := .
 OBJS := $(addprefix $(OBJS_DIR), $(SRCS:%.cpp=%.o))
 DEPS := $(OBJS:.o=.d)

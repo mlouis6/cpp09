@@ -1,6 +1,8 @@
 #ifndef RPN_HPP
 # define RPN_HPP
 
+# include <stack>
+
 class RPN
 {
 	public:
@@ -10,8 +12,11 @@ class RPN
 		RPN& operator=(RPN& other);
 		~RPN();
 
+		int	calculate(char* args);
+		bool			err;
+
 	private:
-	
+		std::stack<int>	m_nbs;
 
 };
 
