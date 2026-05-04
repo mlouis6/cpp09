@@ -32,17 +32,10 @@ RPN::~RPN()
 #include <limits>
 int	RPN::calculate(char* args)
 {
-	long res;long	y;long	x;
-	/**
-	 * push to stack until operator
-	 * top
-	 * pop
-	 * top
-	 * pop
-	 * top2 operator top1
-	 * push
-	 *
-	*/
+	long	res;
+	long	y;
+	long	x;
+
 	int	i = 0;
 	while (args[i])
 	{
@@ -51,7 +44,6 @@ int	RPN::calculate(char* args)
 			case '+':
 				if (m_nbs.size() < 2)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -62,7 +54,6 @@ int	RPN::calculate(char* args)
 				res = x + y;
 				if (std::numeric_limits<int>::max() < res || std::numeric_limits<int>::min() > res)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -71,7 +62,6 @@ int	RPN::calculate(char* args)
 			case '-':
 				if (m_nbs.size() < 2)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -82,7 +72,6 @@ int	RPN::calculate(char* args)
 				res = x - y;
 				if (std::numeric_limits<int>::max() < res || std::numeric_limits<int>::min() > res)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -92,7 +81,6 @@ int	RPN::calculate(char* args)
 			case '*':
 				if (m_nbs.size() < 2)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 					return 1;
@@ -104,7 +92,6 @@ int	RPN::calculate(char* args)
 				res = x * y;
 				if (std::numeric_limits<int>::max() < res || std::numeric_limits<int>::min() > res)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -114,7 +101,6 @@ int	RPN::calculate(char* args)
 			case '/':
 				if (m_nbs.size() < 2)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -124,14 +110,12 @@ int	RPN::calculate(char* args)
 				m_nbs.pop();
 				if (y == 0)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
 				res = x / y;
 				if (std::numeric_limits<int>::max() < res || std::numeric_limits<int>::min() > res)
 				{
-					// std::cerr << "Error" << std::endl;
 					err = true;
 					return 1;
 				}
@@ -143,7 +127,6 @@ int	RPN::calculate(char* args)
 			default:
 				if (!isdigit(args[i]))
 				{
-					// std::cerr << "Error"<< std::endl;
 					err = true;
 					return 1;
 				}
@@ -161,9 +144,3 @@ int	RPN::calculate(char* args)
 		err = true;
 	return static_cast<int> (m_nbs.top());
 }
-
-// TODO: check overflow / underflow
-// TODO: check if divided by 0
-// TODO: check between 0-9
-
-
