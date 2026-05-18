@@ -3,10 +3,10 @@
 *.log
 *.o
 *.d
-*.txt
+# *.txt
 # *.md
 .build/
 btc
 RPN
 PmergeMe
-*.csv
+# *.csv

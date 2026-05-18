@@ -8,7 +8,7 @@ look for date
 etc...
 
 # ex01
-## vector (?)
+## stack
 one digit number
 push and pop
 so whatever container has that (like stack)

@@ -24,6 +24,35 @@ bool	checkDate(char* date)
 			cmp->tm_mday == d);
 }
 
+bool	checkFirstLine(std::string line)
+{
+	size_t	posD = line.find("date") + 4;
+	// TODO: check fail
+	if (posD != 4)
+	{
+		std::cerr << "Need date" << std::endl;
+		return false;
+	}
+	size_t	posE = line.find("exchange_rate");
+	// TODO: check fail
+	if (posE != posD + 1)
+	{
+		std::cerr << "delimiter too long" << std::endl;
+		return false;
+	}
+	if (line[posD] != ',')
+	{
+		std::cerr << "CSV badly formatted" << std::endl;
+		return false;
+	}
+	if (line[posE + std::string("exchange_rate").size()])
+	{
+		std::cerr << "Too many stuff" << std::endl;
+		return false;
+	}
+	return true;
+}
+
 int main(int argc, char** argv)
 {
 	if (argc != 2)
@@ -32,24 +61,29 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	std::ifstream in(argv[1]);
+	// std::ifstream in(argv[1]);
 	
-	if (in.fail())
-	{
-		std::cout << "Error\nCouldn't open file" << std::endl;
-	}
+	// if (in.fail())
+	// {
+	// 	std::cout << "Error\nCouldn't open file" << std::endl;
+	// 	return 1;
+	// }
 
-	std::ifstream data("data.csv");
-	if (data.fail())
-	{
-		std::cout << "Error\nCouldn't read the data set" << std::endl;
-	}
+	// std::ifstream data("data.csv");
+	// if (data.fail())
+	// {
+	// 	std::cout << "Error\nCouldn't read the data set" << std::endl;
+	// 	return 1;
+	// }
 
+	
 	// TODO: loop through lines
-	if (!checkDate(argv[1]))
-	{
-		std::cout << "Error\nInvalid date: "
-	}
+	// if (!checkDate(argv[1]))
+	// {
+	// 	std::cout << "Error\nInvalid date: " << argv[1] << std::endl;
+	// 	return 1;
+	// }
+	checkFirstLine(std::string(argv[1]));
 	std::cout << std::endl;
 
 	return 0;
