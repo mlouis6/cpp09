@@ -5,7 +5,7 @@
 #include <ctime>
 #include <sstream>
 
-bool	checkDate(char* date)
+bool	checkDate(std::string date)
 {
 	struct tm	t = {};
 	int	y, m, d;
@@ -24,32 +24,62 @@ bool	checkDate(char* date)
 			cmp->tm_mday == d);
 }
 
-bool	checkFirstLine(std::string line)
+std::string	trim(const std::string& str)
 {
-	size_t	posD = line.find("date") + 4;
-	// TODO: check fail
-	if (posD != 4)
+	size_t begin = str.find_first_not_of(" \t\n\v\f\r");
+	if (begin == std::string::npos)
+		return "";
+	size_t end = str.find_last_not_of(" \t\n\v\f\r");
+	
+	return str.substr(begin, end - begin + 1);
+}
+
+bool	checkFirstLine(std::string line, char del)
+{
+	size_t	pos = line.find(del);
+
+	std::string sub = line.substr(0, pos );
+	sub = trim(sub);
+	if (sub != "date")
 	{
-		std::cerr << "Need date" << std::endl;
+		std::cout << "Error\nFirst column should be 'date'" << std::endl;
 		return false;
 	}
-	size_t	posE = line.find("exchange_rate");
-	// TODO: check fail
-	if (posE != posD + 1)
+	sub = line.substr(pos + 1);
+	sub = trim(sub);
+	if (sub != "exchange_rate")
 	{
-		std::cerr << "delimiter too long" << std::endl;
+		std::cout << "Error\nSecond column should be 'exchange_rate'" << std::endl;
 		return false;
 	}
-	if (line[posD] != ',')
+
+	return true;
+}
+
+bool	checkLine(std::string line, char del)
+{
+	size_t	pos = line.find(del);
+
+	std::string sub = line.substr(0, pos);
+	sub = trim(sub);
+	if (checkDate(sub))
 	{
-		std::cerr << "CSV badly formatted" << std::endl;
+		std::cout << "Error\nInvalid date: " << sub << std::endl;
 		return false;
 	}
-	if (line[posE + std::string("exchange_rate").size()])
+	sub = line.substr(pos + 1);
+	sub = trim(sub);
+	std::istringstream iss(sub);
+	double	rate;
+	iss >> rate;
+	char	cmp;
+	iss >> cmp;
+	if (cmp != 0) // TODO: check if something nan
 	{
-		std::cerr << "Too many stuff" << std::endl;
+		std::cout << "Error\nInvalid rate: " << sub << std::endl;
 		return false;
 	}
+
 	return true;
 }
 
@@ -83,7 +113,7 @@ int main(int argc, char** argv)
 	// 	std::cout << "Error\nInvalid date: " << argv[1] << std::endl;
 	// 	return 1;
 	// }
-	checkFirstLine(std::string(argv[1]));
+	checkFirstLine(std::string(argv[1]), ',');
 	std::cout << std::endl;
 
 	return 0;
