@@ -17,7 +17,7 @@ bool	checkDate(std::string date)
 	{
 		return false;
 	}
-	if (del1 != '-' || del2 != '-' || y < 2008) //TODO: minimum date
+	if (del1 != '-' || del2 != '-') // || y < 2008) //TODO: minimum date
 	{
 		return false;
 	}
@@ -42,6 +42,7 @@ std::string	trim(const std::string& str)
 	return str.substr(begin, end - begin + 1);
 }
 
+// TODO: check missing delimiter
 bool	checkFirstLine(std::string line, std::string col1, std::string col2, char del)
 {
 	size_t	pos = line.find(del);
@@ -63,14 +64,10 @@ bool	checkFirstLine(std::string line, std::string col1, std::string col2, char d
 
 	return true;
 }
-// struct	pair
-// {
-// 	std::string	date;
-// 	float		val;
-// };
 
 typedef std::pair<std::string, float> pair;
 
+// TODO: check missing delimiter
 bool	checkLine(std::string line, char del, double max, pair& data)
 {
 	size_t	pos = line.find(del);
@@ -105,9 +102,6 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-
-
-
 	std::ifstream in_data("data.csv");
 	if (in_data.fail())
 	{
@@ -130,9 +124,12 @@ int main(int argc, char** argv)
 		{
 			return 1;
 		}
-		data[ret.first] = ret.second;
+		// TODO: check double
+		// data[ret.first] = ret.second;
+		data.insert(ret);
 	}
 
+	std::cout << "last line= " << data["2022-03-29"] << std::endl;
 
 	std::ifstream in(argv[1]);
 	
@@ -154,16 +151,29 @@ int main(int argc, char** argv)
 		if (checkLine(line, '|', 1000, ret))
 		{
 			// TODO: the code (not nemo)
+			std::map<std::string, float>::const_iterator it = data.find(ret.first);
+			if (it != data.end())
+			{
+				std::cout << ret.first << " => " << ret.second;
+				std::cout << " = " << ret.second * data[ret.first] << std::endl;
+			}
+			else
+			{
+				it = data.upper_bound(ret.first);
+				if (it != data.begin())
+				{
+					--it;
+					std::cout << ret.first << " => " << ret.second;
+					std::cout << " = " << ret.second * it->second << std::endl;
+				}
+				else
+				{
+					std::cout << "No data old enough for " << ret.first << std::endl;
+				}
+			}
 		}
 	}
 	
-	// TODO: loop through lines
-	// if (!checkDate(argv[1]))
-	// {
-	// 	std::cout << "Error\nInvalid date: " << argv[1] << std::endl;
-	// 	return 1;
-	// }
-	// checkFirstLine(std::string(argv[1]), ',');
 	std::cout << std::endl;
 
 	return 0;
