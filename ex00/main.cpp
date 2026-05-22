@@ -9,10 +9,16 @@ bool	checkDate(std::string date)
 {
 	struct tm	t = {};
 	int	y, m, d;
-	std::istringstream is(date);
-	char del;
-	is >> y >> del >> m >> del >> d;
-	// TODO: maybe check for before btc date and after today
+	std::istringstream iss(date);
+	char del1, del2;
+	if (!(iss >> y >> del1 >> m >> del2 >> d))
+	{
+		return false;
+	}
+	if (del1 != '-' || del2 != '-')
+	{
+		return false;
+	}
 	t.tm_year = y - 1900;
 	t.tm_mon = m - 1;
 	t.tm_mday = d;
@@ -62,7 +68,7 @@ bool	checkLine(std::string line, char del)
 
 	std::string sub = line.substr(0, pos);
 	sub = trim(sub);
-	if (checkDate(sub))
+	if (!checkDate(sub))
 	{
 		std::cout << "Error\nInvalid date: " << sub << std::endl;
 		return false;
@@ -70,11 +76,9 @@ bool	checkLine(std::string line, char del)
 	sub = line.substr(pos + 1);
 	sub = trim(sub);
 	std::istringstream iss(sub);
-	double	rate;
+	float	rate;
 	iss >> rate;
-	char	cmp;
-	iss >> cmp;
-	if (cmp != 0) // TODO: check if something nan
+	if (!iss.eof() || iss.fail() || rate < 0 || rate > 1000) // TODO: check if something nan
 	{
 		std::cout << "Error\nInvalid rate: " << sub << std::endl;
 		return false;
@@ -113,7 +117,11 @@ int main(int argc, char** argv)
 	// 	std::cout << "Error\nInvalid date: " << argv[1] << std::endl;
 	// 	return 1;
 	// }
-	checkFirstLine(std::string(argv[1]), ',');
+	// checkFirstLine(std::string(argv[1]), ',');
+	if (!checkLine(std::string(argv[1]), ','))
+	{
+		return 1;
+	}
 	std::cout << std::endl;
 
 	return 0;
