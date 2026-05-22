@@ -125,6 +125,13 @@ int main(int argc, char** argv)
 			return 1;
 		}
 		// TODO: check double
+		std::map<std::string, float>::const_iterator it = data.find(ret.first);
+		if (it != data.end())
+		{
+			std::cout << "Warning: '" << ret.first;
+			std::cout << "' appears multiple times in dataset, first occurence (";
+			std::cout << data[ret.first] << ") is the one saved." << std::endl;
+		}
 		// data[ret.first] = ret.second;
 		data.insert(ret);
 	}
