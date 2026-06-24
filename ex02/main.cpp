@@ -4,18 +4,26 @@
 #include <vector>
 #include <exception>
 #include <utility>
-#include <list>
+#include <deque>
 #include <deque>
 #include <iterator>
 #include <algorithm>
 
 typedef std::pair<int, int> pairInt;
 
-std::list<pairInt> createPairs(std::list<int> nbs)
+struct
+
+/** */
+std::deque<pairInt> createPairs(const std::deque<int> &nbs, int *reminder)
 {
-	std::list<pairInt> nbPairs;
+	if (nbs.size() % 2 != 0)
+		*reminder = *(nbs.end());
+	if (nbs.size() == 1)
+		return std::deque<pairInt>();
+
+	std::deque<pairInt> nbPairs;
 	std::size_t size = nbs.size();
-	std::list<int>::const_iterator it = nbs.begin();
+	std::deque<int>::const_iterator it = nbs.begin();
 	for (std::size_t i = 0; i < size - 2; i += 2, ++it)
 	{
 		pairInt tmp(*it, *(++it));
@@ -24,13 +32,49 @@ std::list<pairInt> createPairs(std::list<int> nbs)
 	return nbPairs;
 }
 
-void findBiggest(std::list<pairInt> &pairs)
+std::deque<pairInt> createPairs(const std::deque<pairInt> &nbs, int *reminder)
 {
-	std::list<pairInt>::iterator ite = pairs.end();
-	for (std::list<pairInt>::iterator it = pairs.begin(); it != ite; ++it)
+	if (nbs.size() % 2 != 0)
+		*reminder = 0;// *(nbs.end());
+	if (nbs.size() == 1)
+		return std::deque<pairInt>();
+
+	std::deque<pairInt> nbPairs;
+	std::size_t size = nbs.size();
+	std::deque<pairInt>::const_iterator it = nbs.begin();
+	for (std::size_t i = 0; i < size - 2; i += 2, ++it)
+	{
+		pairInt tmp(it->first, (++it)->first);
+		nbPairs.push_back(tmp);
+	}
+	return nbPairs;
+}
+
+void findBiggest(std::deque<pairInt> &pairs)
+{
+	std::deque<pairInt>::iterator ite = pairs.end();
+	for (std::deque<pairInt>::iterator it = pairs.begin(); it != ite; ++it)
 	{
 		if (it->second > it->first)
 			std::swap(it->first, it->second);
+	}
+}
+
+void sortBiggest(std::deque<pairInt> &pairs)
+{
+	static std::deque<pairInt> sorted = pairs;
+	static std::deque<int> reminders;
+
+	while (!sorted.empty())
+	{
+		int rem;
+		sorted = createPairs(sorted, &rem);
+		if (sorted.empty())
+		{
+			reminders.push_back(rem);
+			pairInt tmp(rem, );
+		}
+		findBiggest(sorted);		
 	}
 }
 
@@ -67,7 +111,7 @@ int main(int argc, char **argv)
 		std::cerr << e.what() << std::endl;
 	}
 
-	std::list<int> nbs;
+	std::deque<int> nbs;
 	nbs.push_back(14);
 	nbs.push_back(2);
 	nbs.push_back(9);
@@ -82,10 +126,10 @@ int main(int argc, char **argv)
 	nbs.push_back(4);
 	nbs.push_back(85);
 
-	std::list<pairInt> pi = createPairs(nbs);
+	std::deque<pairInt > pi = createPairs(nbs);
 	findBiggest(pi);
-	std::list<pairInt>::const_iterator ite = pi.end();
-	for (std::list<pairInt>::const_iterator it = pi.begin(); it != ite; ++it)
+	std::deque<pairInt >::const_iterator ite = pi.end();
+	for (std::deque<pairInt >::const_iterator it = pi.begin(); it != ite; ++it)
 	{
 		std::cout << "[" << it->first << ", " << it->second << "]" << std::endl;
 	}
