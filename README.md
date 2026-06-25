@@ -8,7 +8,7 @@ look for date
 etc...
 
 # ex01
-## stack
+## stack // MAYBE LIST HERE
 one digit number
 push and pop
 so whatever container has that (like stack)
@@ -16,7 +16,7 @@ read stdin
 switch case + - * /
 
 # ex02
-## list (?)
+## list (?) // VECTOR HERE
 ## deque (?)
 arg = positive integers
 merge-insert
