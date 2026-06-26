@@ -33,6 +33,11 @@ void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<
 			second.push_back(*it);
 			++it;
 		}
+		else
+		{
+			second.push_back(*(--first.end()));
+			first.pop_back();
+		}
 	}
 }
 
@@ -49,19 +54,31 @@ void findBiggest(std::deque<int> &first, std::deque<int> &second)
 	}
 }
 
-// void sortBiggest(std::deque<int> &pairs)
-// {
-// 	static std::deque<int> sorted = pairs;
+void sortBiggest(std::deque<int> &first)//, std::deque<int> &second)
+{
+	// static std::deque<int> sorted = first;
+	std::deque<int> sf;
+	std::deque<int> ss;
 
-// 	while ((sorted.begin())->isReminder)
-// 	{
-// 		std::cout << "hello" << std::endl;
-// 		sorted = createPairs(sorted);
-// 		findBiggest(sorted);
-// 		sortBiggest(sorted);
-// 	}
-// 	pairs = sorted;
-// }
+	createPairs(first, sf, ss);
+	static int i =0;
+	while (!ss.empty() && i < 10)
+	{
+		// std::cout << "hello" << std::endl;
+		findBiggest(sf, ss);
+		sortBiggest(sf); //, ss);
+		// createPairs(sf, sf, ss);
+		std::cout << "hello: " << *(ss.begin()) << std::endl;
+		++i;
+	}
+	std::deque<int >::const_iterator ite = sf.end();
+	std::deque<int >::const_iterator it = sf.begin(); 
+	for (; it != ite; ++it)
+	{
+		std::cout << "sortBIg: " << *it << std::endl;
+	}
+	// first = sorted;
+}
 
 void foo(char *args)
 {
@@ -115,19 +132,22 @@ int main(int argc, char **argv)
 	std::deque<int> second;
 	createPairs(nbs, first, second);
 	findBiggest(first, second);
+	sortBiggest(first);
 
 	std::deque<int >::const_iterator fite = first.end();
 	std::deque<int >::const_iterator fit = first.begin();
 	std::deque<int >::const_iterator site = second.end();
 	std::deque<int >::const_iterator sit = second.begin(); ; 
-	for (; fit != fite; ++fit)
+	for (; sit != site; ++sit)
 	{
-		std::cout << "[" << *fit << ", ";
-		if (sit != site)
+		std::cout << "[";
+		if (fit != fite)
 		{
-			std::cout << *sit;
-			++sit;
+			std::cout << *fit;
+			++fit;
 		}
+		std::cout << ", ";
+			std::cout << *sit;
 		std::cout << "]" << std::endl;
 	}
 	return 0;
