@@ -24,13 +24,15 @@ void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<
 	// 	return std::deque<pairInt>();
 
 	std::deque<int>::const_iterator ite = nbs.end();
-	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; ++it)
+	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; )
 	{
 		first.push_back(*it);
 		++it;
 		if (it != ite)
+		{
 			second.push_back(*it);
-		std::cout << "hello" << std::endl;
+			++it;
+		}
 	}
 }
 
@@ -40,7 +42,7 @@ void findBiggest(std::deque<int> &first, std::deque<int> &second)
 	std::deque<int>::iterator sit = second.begin();
 	std::deque<int>::iterator fite = first.end();
 	std::deque<int>::iterator fit = first.begin();
-	for (; fit != fite || sit != site; ++sit, ++fit)
+	for (; fit != fite && sit != site; ++sit, ++fit)
 	{
 		if (*sit > *fit)
 			std::swap(*fit, *sit);
@@ -118,9 +120,15 @@ int main(int argc, char **argv)
 	std::deque<int >::const_iterator fit = first.begin();
 	std::deque<int >::const_iterator site = second.end();
 	std::deque<int >::const_iterator sit = second.begin(); ; 
-	for (; fit != fite || sit != site; ++fit, ++sit)
+	for (; fit != fite; ++fit)
 	{
-		std::cout << "[" << *fit << ", " << *sit << "]" << std::endl;
+		std::cout << "[" << *fit << ", ";
+		if (sit != site)
+		{
+			std::cout << *sit;
+			++sit;
+		}
+		std::cout << "]" << std::endl;
 	}
 	return 0;
 }
