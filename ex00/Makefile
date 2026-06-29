@@ -6,7 +6,7 @@
 #    By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/22 11:28:19 by mlouis            #+#    #+#              #
-#    Updated: 2026/03/24 11:01:26 by mlouis           ###   ########.fr        #
+#    Updated: 2026/06/29 18:47:22 by mlouis           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME := btc
 
 OBJS_DIR := .build/
 
-SRCS := main.cpp
+SRCS := main.cpp BitcoinExchange.cpp
 INCS := .
 OBJS := $(addprefix $(OBJS_DIR), $(SRCS:%.cpp=%.o))
 DEPS := $(OBJS:.o=.d)

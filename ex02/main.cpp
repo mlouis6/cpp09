@@ -7,6 +7,7 @@
 #include <deque>
 #include <iterator>
 #include <algorithm>
+#include <sys/time.h>
 
 struct pairInt
 {
@@ -99,29 +100,13 @@ std::deque<int> initDeque(char *args)
 	return nbs;
 }
 
-//?  std::time_t, std::difftime, and CLOCKS_PER_SEC
-#include <sys/time.h>
-void	manageTime()
-{
-	// start time
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	unsigned long start = 1000000 * tv.tv_sec + tv.tv_usec;
-
-	// end time
-	gettimeofday(&tv, 0);
-	unsigned long end = 1000000 * tv.tv_sec + tv.tv_usec - start;
-
-}
-
-
+// https://stackoverflow.com/questions/5833094/get-a-timestamp-in-c-in-microseconds
 unsigned long	startTimer()
 {
 	struct timeval tv;
 	gettimeofday(&tv, 0);
 	return 1000000 * tv.tv_sec + tv.tv_usec;
 }
-
 
 unsigned long	endTimer(unsigned long start)
 {
@@ -147,22 +132,7 @@ int main(int argc, char **argv)
 		std::cerr << e.what() << std::endl;
 	}
 
-
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
-	// std::deque<int> nbs;
-	// nbs.push_back(14);
-	// nbs.push_back(2);
-	// nbs.push_back(9);
-	// nbs.push_back(34);
-	// nbs.push_back(3);
-	// nbs.push_back(11);
-	// nbs.push_back(88);
-	// nbs.push_back(7);
-	// nbs.push_back(41);
-	// nbs.push_back(6);
-	// nbs.push_back(8);
-	// nbs.push_back(4);
-	// nbs.push_back(85);
 
 	std::deque<int> first;
 	std::deque<int> second;

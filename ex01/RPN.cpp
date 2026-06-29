@@ -1,4 +1,8 @@
 #include "RPN.hpp"
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <limits>
 
 RPN::RPN()
 {
@@ -26,10 +30,6 @@ RPN::~RPN()
 
 }
 
-#include <cctype>
-#include <cstdlib>
-#include <iostream>
-#include <limits>
 int	RPN::calculate(char* args)
 {
 	long	res;
