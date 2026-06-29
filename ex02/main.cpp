@@ -99,9 +99,39 @@ std::deque<int> initDeque(char *args)
 	return nbs;
 }
 
+//?  std::time_t, std::difftime, and CLOCKS_PER_SEC
+#include <sys/time.h>
+void	manageTime()
+{
+	// start time
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	unsigned long start = 1000000 * tv.tv_sec + tv.tv_usec;
+
+	// end time
+	gettimeofday(&tv, 0);
+	unsigned long end = 1000000 * tv.tv_sec + tv.tv_usec - start;
+
+}
+
+
+unsigned long	startTimer()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return 1000000 * tv.tv_sec + tv.tv_usec;
+}
+
+
+unsigned long	endTimer(unsigned long start)
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return (1000000 * tv.tv_sec + tv.tv_usec) - start;
+}
+
 int main(int argc, char **argv)
 {
-
 	std::deque<int>	nbs;
 	if (argc != 2 || argv[1][0] == 0)
 	{
@@ -156,6 +186,7 @@ int main(int argc, char **argv)
 			std::cout << *sit;
 		std::cout << "]" << std::endl;
 	}
+
 	return 0;
 }
 
