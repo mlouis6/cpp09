@@ -16,7 +16,6 @@ typedef std::pair<std::string, float> pair;
 class BitcoinExchange
 {
 	public:
-		BitcoinExchange();
 		// BitcoinExchange(const char *filename);
 		~BitcoinExchange();
 
@@ -31,6 +30,7 @@ class BitcoinExchange
 		// const char*	m_filename;
 		BitcoinExchange(BitcoinExchange& other);
 		BitcoinExchange& operator=(BitcoinExchange& other);
+		BitcoinExchange();
 };
 
 #endif
