@@ -80,9 +80,11 @@ void sortBiggest(std::deque<int> &first)//, std::deque<int> &second)
 	// first = sorted;
 }
 
-void foo(char *args)
+
+// TODO: change to unsigned
+std::deque<int> initDeque(char *args)
 {
-	std::vector<unsigned int> cont1;
+	std::deque<int> nbs;
 	std::istringstream iss(args);
 	while (!iss.eof())
 	{
@@ -92,41 +94,45 @@ void foo(char *args)
 		{
 			throw std::runtime_error("Error: argument contains a none positive integer");
 		}
-		cont1.push_back(static_cast<unsigned int>(val));
+		nbs.push_back(static_cast<int>(val));
 	}
+	return nbs;
 }
 
 int main(int argc, char **argv)
 {
 
+	std::deque<int>	nbs;
 	if (argc != 2 || argv[1][0] == 0)
 	{
-		std::cerr << "Erro: usage './PmergeMe \"<positive integers>\"'" << std::endl;
+		std::cerr << "Error: usage './PmergeMe \"<positive integers>\"'" << std::endl;
 		return 1;
 	}
 	try
 	{
-		foo(argv[1]);
+		nbs = initDeque(argv[1]);
 	}
 	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
 
-	std::deque<int> nbs;
-	nbs.push_back(14);
-	nbs.push_back(2);
-	nbs.push_back(9);
-	nbs.push_back(34);
-	nbs.push_back(3);
-	nbs.push_back(11);
-	nbs.push_back(88);
-	nbs.push_back(7);
-	nbs.push_back(41);
-	nbs.push_back(6);
-	nbs.push_back(8);
-	nbs.push_back(4);
-	nbs.push_back(85);
+
+	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
+	// std::deque<int> nbs;
+	// nbs.push_back(14);
+	// nbs.push_back(2);
+	// nbs.push_back(9);
+	// nbs.push_back(34);
+	// nbs.push_back(3);
+	// nbs.push_back(11);
+	// nbs.push_back(88);
+	// nbs.push_back(7);
+	// nbs.push_back(41);
+	// nbs.push_back(6);
+	// nbs.push_back(8);
+	// nbs.push_back(4);
+	// nbs.push_back(85);
 
 	std::deque<int> first;
 	std::deque<int> second;
@@ -203,3 +209,5 @@ difference between the two containers used.
  * 2. compair the number in the pair to determine the biggest of the two
  * 3. recursively sort largest elements of each pair
  */
+
+
