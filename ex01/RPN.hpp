@@ -2,7 +2,7 @@
 # define RPN_HPP
 
 # include <stack>
-# include <vector>
+# include <list>
 
 class RPN
 {
@@ -17,7 +17,7 @@ class RPN
 		bool			err;
 
 	private:
-		std::stack<int, std::vector<int> >	m_nbs;
+		std::stack<int, std::list<int> >	m_nbs;
 
 };
 

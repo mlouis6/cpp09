@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <limits>
+#include <cmath>
 
 RPN::RPN()
 {
@@ -113,7 +114,7 @@ int	RPN::calculate(char* args)
 					err = true;
 					return 1;
 				}
-				res = x / y;
+				res = round(static_cast<double>(x) / static_cast<double>(y));
 				if (std::numeric_limits<int>::max() < res || std::numeric_limits<int>::min() > res)
 				{
 					err = true;
