@@ -81,46 +81,127 @@
 // 	}
 // 	// first = sorted;
 // }
-
-typedef std::deque<unsigned int>::const_iterator deque_citer;
-
-struct pairInt
+namespace deque
 {
-	deque_citer	begin;
-	std::size_t	size;
-};
+	typedef std::deque<unsigned int> 		u_int;
+	typedef deque::u_int::const_iterator 	c_iter;
 
-std::deque<unsigned int> initDeque(char *args)
-{
-	std::deque<unsigned int> nbs;
-	std::istringstream iss(args);
-	while (!iss.eof())
+	struct group
 	{
-		unsigned long val;
-		iss >> val;
-		if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
+		c_iter		begin;
+		std::size_t	size;
+
+		group() : size(0) {};
+	};
+
+	typedef std::deque<group> 				pair;
+	typedef deque::pair::const_iterator 	cp_iter;
+
+	deque::u_int init(char *args)
+	{
+		deque::u_int nbs;
+		std::istringstream iss(args);
+		while (!iss.eof())
 		{
-			throw std::runtime_error("Error: argument contains a none positive integer");
+			unsigned long val;
+			iss >> val;
+			if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
+			{
+				throw std::runtime_error("Error: argument contains a none positive integer");
+			}
+			nbs.push_back(static_cast<unsigned int>(val));
 		}
-		nbs.push_back(static_cast<unsigned int>(val));
+		return nbs;
 	}
-	return nbs;
+
+	// void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<int> &second)
+	// {
+	// 	// if (nbs.size() == 1)
+	// 	// 	return std::deque<pairInt>();
+
+	// 	std::deque<int>::const_iterator ite = nbs.end();
+	// 	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; )
+	// 	{
+	// 		first.push_back(*it);
+	// 		++it;
+	// 		if (it != ite)
+	// 		{
+	// 			second.push_back(*it);
+	// 			++it;
+	// 		}
+	// 		else
+	// 		{
+	// 			second.push_back(*(--first.end()));
+	// 			first.pop_back();
+	// 		}
+	// 	}
+	// }
+
+	deque::pair createPairs(const deque::u_int& nbs)
+	{
+		deque::pair pairs;
+		c_iter ite = nbs.end();
+
+		for (c_iter it = nbs.begin() ; it != ite ; )
+		{
+			group g;
+			g.begin = it;
+			++g.size;
+			++it;
+			if (it != ite)
+			{
+				++g.size;
+				++it;
+			}
+			pairs.push_back(g);
+		}
+		return pairs;
+	}
+
+	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
+	{
+		cp_iter ite = pairs.end();
+		cp_iter it = pairs.begin();
+		for (; it != ite; ++it)
+		{
+			c_iter	iter = it->begin;
+			os << "[";
+			for (std::size_t i = 0 ; i < it->size - 1 ; ++i, ++iter)
+			{
+				os << *iter;
+				os << ", ";
+			}
+			os << *iter;
+			os << "]" << std::endl;
+		}
+		return os;
+	}
+
+	/**
+	 * 
+	 * 
+	 */
+
 }
 
-// https://stackoverflow.com/questions/5833094/get-a-timestamp-in-c-in-microseconds
-unsigned long	startTimer()
+namespace timer
 {
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	return 1000000 * tv.tv_sec + tv.tv_usec;
+	// https://stackoverflow.com/questions/5833094/get-a-timestamp-in-c-in-microseconds
+	unsigned long	start()
+	{
+		struct timeval tv;
+		gettimeofday(&tv, 0);
+		return 1000000 * tv.tv_sec + tv.tv_usec;
+	}
+
+	unsigned long	end(unsigned long start)
+	{
+		struct timeval tv;
+		gettimeofday(&tv, 0);
+		return (1000000 * tv.tv_sec + tv.tv_usec) - start;
+	}
 }
 
-unsigned long	endTimer(unsigned long start)
-{
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	return (1000000 * tv.tv_sec + tv.tv_usec) - start;
-}
 
 #include <cmath>
 namespace jacobsthal
@@ -130,7 +211,7 @@ namespace jacobsthal
 		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
 	}
 
-	std::size_t getNumber(std::deque<unsigned int> nbs)
+	std::size_t getNumber(deque::u_int nbs)
 	{
 		if (nbs.size() == 0)
 			return 0;
@@ -151,7 +232,7 @@ namespace jacobsthal
 
 int main(int argc, char **argv)
 {
-	std::deque<unsigned int>	nbs;
+	deque::u_int	nbs;
 	if (argc != 2 || argv[1][0] == 0)
 	{
 		std::cerr << "Error: usage './PmergeMe \"<positive integers>\"'" << std::endl;
@@ -159,7 +240,7 @@ int main(int argc, char **argv)
 	}
 	try
 	{
-		nbs = initDeque(argv[1]);
+		nbs = deque::init(argv[1]);
 	}
 	catch (const std::exception &e)
 	{
@@ -172,28 +253,14 @@ int main(int argc, char **argv)
 	std::cout << "size= " << nbs.size() << std::endl;
 	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs) << std::endl;
 
-	std::deque<unsigned int> first;
-	std::deque<unsigned int> second;
+	deque::u_int first;
+	deque::u_int second;
 	// createPairs(nbs, first, second);
 	// findBiggest(first, second);
 	// sortBiggest(first);
 
-	deque_citer fite = first.end();
-	deque_citer fit = first.begin();
-	deque_citer site = second.end();
-	deque_citer sit = second.begin();
-	for (; sit != site; ++sit)
-	{
-		std::cout << "[";
-		if (fit != fite)
-		{
-			std::cout << *fit;
-			++fit;
-		}
-		std::cout << ", ";
-			std::cout << *sit;
-		std::cout << "]" << std::endl;
-	}
+	deque::pair pairs = deque::createPairs(nbs);
+	std::cout << pairs << std::endl;
 
 	return 0;
 }
