@@ -114,6 +114,29 @@ unsigned long	endTimer(unsigned long start)
 	gettimeofday(&tv, 0);
 	return (1000000 * tv.tv_sec + tv.tv_usec) - start;
 }
+#include <cmath>
+std::size_t getNextJacobsthal(std::size_t ji)
+{
+	return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
+}
+
+std::size_t getJacobsthalNumber(std::deque<int> nbs)
+{
+	if (nbs.size() == 0)
+		return 0;
+	if (nbs.size() == 1)
+		return 1;
+	std::size_t ji = 1;
+	std::size_t jn = getNextJacobsthal(ji);
+	std::size_t save;
+	while (jn < nbs.size())
+	{
+		save = jn;
+		++ji;
+		jn = getNextJacobsthal(ji);
+	}
+	return save;
+}
 
 int main(int argc, char **argv)
 {
@@ -133,6 +156,9 @@ int main(int argc, char **argv)
 	}
 
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
+
+	std::cout << "size= " << nbs.size() << std::endl;
+	std::cout << "jacobsthal= " << getJacobsthalNumber(nbs) << std::endl;
 
 	std::deque<int> first;
 	std::deque<int> second;
