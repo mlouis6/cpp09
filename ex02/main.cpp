@@ -201,7 +201,7 @@ namespace timer
 		return 1000000 * tv.tv_sec + tv.tv_usec;
 	}
 
-	unsigned long	end(unsigned long start)
+	unsigned long	stop(unsigned long start)
 	{
 		struct timeval tv;
 		gettimeofday(&tv, 0);
