@@ -9,93 +9,100 @@
 #include <algorithm>
 #include <sys/time.h>
 
-struct pairInt
-{
-	std::deque<int>	first;
-	std::deque<int>	second;
+// struct pairInt
+// {
+// 	std::deque<int>	first;
+// 	std::deque<int>	second;
 
-	// pairInt() : first(-1), second(-1), isReminder(false) {};
-	// pairInt(int a_first, int a_second, bool a_rem) : first(a_first), second(a_second), isReminder(a_rem) {};
-};
+// 	// pairInt() : first(-1), second(-1), isReminder(false) {};
+// 	// pairInt(int a_first, int a_second, bool a_rem) : first(a_first), second(a_second), isReminder(a_rem) {};
+// };
+
 
 /** */
-void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<int> &second)
+// void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<int> &second)
+// {
+// 	// if (nbs.size() == 1)
+// 	// 	return std::deque<pairInt>();
+
+// 	std::deque<int>::const_iterator ite = nbs.end();
+// 	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; )
+// 	{
+// 		first.push_back(*it);
+// 		++it;
+// 		if (it != ite)
+// 		{
+// 			second.push_back(*it);
+// 			++it;
+// 		}
+// 		else
+// 		{
+// 			second.push_back(*(--first.end()));
+// 			first.pop_back();
+// 		}
+// 	}
+// }
+
+// void findBiggest(std::deque<int> &first, std::deque<int> &second)
+// {
+// 	std::deque<int>::iterator site = second.end();
+// 	std::deque<int>::iterator sit = second.begin();
+// 	std::deque<int>::iterator fite = first.end();
+// 	std::deque<int>::iterator fit = first.begin();
+// 	for (; fit != fite && sit != site; ++sit, ++fit)
+// 	{
+// 		if (*sit > *fit)
+// 			std::swap(*fit, *sit);
+// 	}
+// }
+
+// void sortBiggest(std::deque<int> &first)//, std::deque<int> &second)
+// {
+// 	// static std::deque<int> sorted = first;
+// 	std::deque<int> sf;
+// 	std::deque<int> ss;
+
+// 	createPairs(first, sf, ss);
+// 	static int i =0;
+// 	while (!ss.empty() && i < 10)
+// 	{
+// 		// std::cout << "hello" << std::endl;
+// 		findBiggest(sf, ss);
+// 		sortBiggest(sf); //, ss);
+// 		// createPairs(sf, sf, ss);
+// 		std::cout << "hello: " << *(ss.begin()) << std::endl;
+// 		++i;
+// 	}
+// 	std::deque<int >::const_iterator ite = sf.end();
+// 	std::deque<int >::const_iterator it = sf.begin(); 
+// 	for (; it != ite; ++it)
+// 	{
+// 		std::cout << "sortBIg: " << *it << std::endl;
+// 	}
+// 	// first = sorted;
+// }
+
+typedef std::deque<unsigned int>::const_iterator deque_citer;
+
+struct pairInt
 {
-	// if (nbs.size() == 1)
-	// 	return std::deque<pairInt>();
+	deque_citer	begin;
+	std::size_t	size;
+};
 
-	std::deque<int>::const_iterator ite = nbs.end();
-	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; )
-	{
-		first.push_back(*it);
-		++it;
-		if (it != ite)
-		{
-			second.push_back(*it);
-			++it;
-		}
-		else
-		{
-			second.push_back(*(--first.end()));
-			first.pop_back();
-		}
-	}
-}
-
-void findBiggest(std::deque<int> &first, std::deque<int> &second)
+std::deque<unsigned int> initDeque(char *args)
 {
-	std::deque<int>::iterator site = second.end();
-	std::deque<int>::iterator sit = second.begin();
-	std::deque<int>::iterator fite = first.end();
-	std::deque<int>::iterator fit = first.begin();
-	for (; fit != fite && sit != site; ++sit, ++fit)
-	{
-		if (*sit > *fit)
-			std::swap(*fit, *sit);
-	}
-}
-
-void sortBiggest(std::deque<int> &first)//, std::deque<int> &second)
-{
-	// static std::deque<int> sorted = first;
-	std::deque<int> sf;
-	std::deque<int> ss;
-
-	createPairs(first, sf, ss);
-	static int i =0;
-	while (!ss.empty() && i < 10)
-	{
-		// std::cout << "hello" << std::endl;
-		findBiggest(sf, ss);
-		sortBiggest(sf); //, ss);
-		// createPairs(sf, sf, ss);
-		std::cout << "hello: " << *(ss.begin()) << std::endl;
-		++i;
-	}
-	std::deque<int >::const_iterator ite = sf.end();
-	std::deque<int >::const_iterator it = sf.begin(); 
-	for (; it != ite; ++it)
-	{
-		std::cout << "sortBIg: " << *it << std::endl;
-	}
-	// first = sorted;
-}
-
-
-// TODO: change to unsigned
-std::deque<int> initDeque(char *args)
-{
-	std::deque<int> nbs;
+	std::deque<unsigned int> nbs;
 	std::istringstream iss(args);
 	while (!iss.eof())
 	{
-		long val;
+		unsigned long val;
 		iss >> val;
-		if (iss.fail() || val < 0 || val > std::numeric_limits<int>::max())
+		if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
 		{
 			throw std::runtime_error("Error: argument contains a none positive integer");
 		}
-		nbs.push_back(static_cast<int>(val));
+		nbs.push_back(static_cast<unsigned int>(val));
 	}
 	return nbs;
 }
@@ -114,33 +121,37 @@ unsigned long	endTimer(unsigned long start)
 	gettimeofday(&tv, 0);
 	return (1000000 * tv.tv_sec + tv.tv_usec) - start;
 }
-#include <cmath>
-std::size_t getNextJacobsthal(std::size_t ji)
-{
-	return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
-}
 
-std::size_t getJacobsthalNumber(std::deque<int> nbs)
+#include <cmath>
+namespace jacobsthal
 {
-	if (nbs.size() == 0)
-		return 0;
-	if (nbs.size() == 1)
-		return 1;
-	std::size_t ji = 1;
-	std::size_t jn = getNextJacobsthal(ji);
-	std::size_t save;
-	while (jn < nbs.size())
+	std::size_t getNext(std::size_t ji)
 	{
-		save = jn;
-		++ji;
-		jn = getNextJacobsthal(ji);
+		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
 	}
-	return save;
+
+	std::size_t getNumber(std::deque<unsigned int> nbs)
+	{
+		if (nbs.size() == 0)
+			return 0;
+		if (nbs.size() == 1)
+			return 1;
+		std::size_t ji = 1;
+		std::size_t jn = getNext(ji);
+		std::size_t save;
+		while (jn < nbs.size())
+		{
+			save = jn;
+			++ji;
+			jn = getNext(ji);
+		}
+		return save;
+	}
 }
 
 int main(int argc, char **argv)
 {
-	std::deque<int>	nbs;
+	std::deque<unsigned int>	nbs;
 	if (argc != 2 || argv[1][0] == 0)
 	{
 		std::cerr << "Error: usage './PmergeMe \"<positive integers>\"'" << std::endl;
@@ -153,23 +164,24 @@ int main(int argc, char **argv)
 	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
+		return 1;
 	}
 
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
 
 	std::cout << "size= " << nbs.size() << std::endl;
-	std::cout << "jacobsthal= " << getJacobsthalNumber(nbs) << std::endl;
+	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs) << std::endl;
 
-	std::deque<int> first;
-	std::deque<int> second;
-	createPairs(nbs, first, second);
-	findBiggest(first, second);
-	sortBiggest(first);
+	std::deque<unsigned int> first;
+	std::deque<unsigned int> second;
+	// createPairs(nbs, first, second);
+	// findBiggest(first, second);
+	// sortBiggest(first);
 
-	std::deque<int >::const_iterator fite = first.end();
-	std::deque<int >::const_iterator fit = first.begin();
-	std::deque<int >::const_iterator site = second.end();
-	std::deque<int >::const_iterator sit = second.begin(); ; 
+	deque_citer fite = first.end();
+	deque_citer fit = first.begin();
+	deque_citer site = second.end();
+	deque_citer sit = second.begin();
 	for (; sit != site; ++sit)
 	{
 		std::cout << "[";
