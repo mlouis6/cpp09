@@ -85,6 +85,7 @@ namespace deque
 {
 	typedef std::deque<unsigned int> 		u_int;
 	typedef deque::u_int::const_iterator 	c_iter;
+	typedef deque::u_int::iterator 			ui_iter;
 
 	struct group
 	{
@@ -96,6 +97,7 @@ namespace deque
 
 	typedef std::deque<group> 				pair;
 	typedef deque::pair::const_iterator 	cp_iter;
+	typedef deque::pair::iterator 			pair_iter;
 
 	deque::u_int init(char *args)
 	{
@@ -177,6 +179,11 @@ namespace deque
 		return os;
 	}
 
+	// void	swap(deque::u_int nbs&, deque::pair& pairs, group& g1, group& g2)
+	// {
+
+	// }
+
 	/**
 	 * 
 	 * 
@@ -252,12 +259,6 @@ int main(int argc, char **argv)
 
 	std::cout << "size= " << nbs.size() << std::endl;
 	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs) << std::endl;
-
-	deque::u_int first;
-	deque::u_int second;
-	// createPairs(nbs, first, second);
-	// findBiggest(first, second);
-	// sortBiggest(first);
 
 	deque::pair pairs = deque::createPairs(nbs);
 	std::cout << pairs << std::endl;
