@@ -89,7 +89,7 @@ namespace deque
 
 	struct group
 	{
-		c_iter		begin;
+		ui_iter		begin;
 		std::size_t	size;
 
 		group() : size(0) {};
@@ -116,35 +116,12 @@ namespace deque
 		return nbs;
 	}
 
-	// void createPairs(const std::deque<int> &nbs, std::deque<int> &first, std::deque<int> &second)
-	// {
-	// 	// if (nbs.size() == 1)
-	// 	// 	return std::deque<pairInt>();
-
-	// 	std::deque<int>::const_iterator ite = nbs.end();
-	// 	for (std::deque<int>::const_iterator it = nbs.begin() ; it != ite ; )
-	// 	{
-	// 		first.push_back(*it);
-	// 		++it;
-	// 		if (it != ite)
-	// 		{
-	// 			second.push_back(*it);
-	// 			++it;
-	// 		}
-	// 		else
-	// 		{
-	// 			second.push_back(*(--first.end()));
-	// 			first.pop_back();
-	// 		}
-	// 	}
-	// }
-
-	deque::pair createPairs(const deque::u_int& nbs)
+	deque::pair createPairs(deque::u_int& nbs)
 	{
 		deque::pair pairs;
-		c_iter ite = nbs.end();
+		ui_iter ite = nbs.end();
 
-		for (c_iter it = nbs.begin() ; it != ite ; )
+		for (ui_iter it = nbs.begin() ; it != ite ; )
 		{
 			group g;
 			g.begin = it;
@@ -158,6 +135,48 @@ namespace deque
 			pairs.push_back(g);
 		}
 		return pairs;
+	}
+
+	void findBiggest(deque::u_int& nbs, deque::pair& pairs)
+	{
+
+		deque::pair pairs;
+		ui_iter ite = nbs.end();
+
+		for (ui_iter it = nbs.begin() ; it != ite ; )
+		{
+			group g;
+			g.begin = it;
+			++g.size;
+			++it;
+			if (it != ite)
+			{
+				++g.size;
+				++it;
+			}
+			pairs.push_back(g);
+		}
+
+
+		std::deque<int>::iterator site = second.end();
+		std::deque<int>::iterator sit = second.begin();
+		std::deque<int>::iterator fite = first.end();
+		std::deque<int>::iterator fit = first.begin();
+		for (; fit != fite && sit != site; ++sit, ++fit)
+		{
+			if (*sit > *fit)
+				std::swap(*fit, *sit);
+		}
+	}
+
+	//TODO: check before calling for size
+	void	swap(deque::u_int& nbs, deque::group& pair)
+	{
+		/**
+		 * ignore last pair if no complete
+		 * check first with the one at half (so 0 and pairs.size() / 2)
+		 * swap until half - 1
+		 */
 	}
 
 	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
@@ -179,10 +198,6 @@ namespace deque
 		return os;
 	}
 
-	// void	swap(deque::u_int nbs&, deque::pair& pairs, group& g1, group& g2)
-	// {
-
-	// }
 
 	/**
 	 * 
@@ -218,16 +233,16 @@ namespace jacobsthal
 		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
 	}
 
-	std::size_t getNumber(deque::u_int nbs)
+	std::size_t getNumber(std::size_t size)
 	{
-		if (nbs.size() == 0)
+		if (size == 0)
 			return 0;
-		if (nbs.size() == 1)
+		if (size == 1)
 			return 1;
 		std::size_t ji = 1;
 		std::size_t jn = getNext(ji);
 		std::size_t save;
-		while (jn < nbs.size())
+		while (jn < size)
 		{
 			save = jn;
 			++ji;
@@ -258,7 +273,7 @@ int main(int argc, char **argv)
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
 
 	std::cout << "size= " << nbs.size() << std::endl;
-	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs) << std::endl;
+	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs.size()) << std::endl;
 
 	deque::pair pairs = deque::createPairs(nbs);
 	std::cout << pairs << std::endl;
