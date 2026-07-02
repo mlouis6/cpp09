@@ -81,6 +81,34 @@
 // 	}
 // 	// first = sorted;
 // }
+
+#include <cmath>
+namespace jacobsthal
+{
+	std::size_t getNext(std::size_t ji)
+	{
+		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
+	}
+
+	std::size_t getNumber(std::size_t size)
+	{
+		if (size == 0)
+			return 0;
+		if (size == 1)
+			return 1;
+		std::size_t ji = 1;
+		std::size_t jn = getNext(ji);
+		std::size_t save;
+		while (jn < size)
+		{
+			save = jn;
+			++ji;
+			jn = getNext(ji);
+		}
+		return save;
+	}
+}
+
 namespace deque
 {
 	typedef std::deque<unsigned int> 		u_int;
@@ -116,7 +144,7 @@ namespace deque
 		return nbs;
 	}
 
-	deque::pair createPairs(deque::u_int& nbs)
+	deque::pair createPairs(deque::u_int& nbs, int recu)
 	{
 		deque::pair pairs;
 		ui_iter ite = nbs.end();
@@ -125,12 +153,17 @@ namespace deque
 		{
 			group g;
 			g.begin = it;
-			++g.size;
-			++it;
-			if (it != ite)
+			// ++g.size;
+			// ++it;
+			int tmp = std::pow(2, recu);
+			while (tmp > 0)
 			{
-				++g.size;
-				++it;
+				if (it != ite)
+				{
+					++g.size;
+					++it;
+				}
+				--tmp;
 			}
 			// TODO: while with nb recursion
 			// if (it != ite)
@@ -150,11 +183,6 @@ namespace deque
 	
 	void	swap(pair_iter it)
 	{
-		/**
-		 * check first with the one at half (so 0 and pairs.size() / 2)
-		 * swap until half - 1
-		 */
-	
 		for (std::size_t i = 0 ; i < it->size / 2 ; ++i)
 		{
 			std::swap(*(it->begin + i), *((it->begin + i) + (it->size / 2)));
@@ -180,7 +208,23 @@ namespace deque
 		}
 	}
 
-	//TODO: check before calling for size
+	std::size_t	getPairsSize(const deque::pair& pairs)
+	{
+		cp_iter ite = pairs.end();
+		cp_iter it = pairs.begin();
+		// exclude the reminders
+		if (it == ite - 1)
+		{
+			std::cout << "lolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilol" << std::endl;
+			return 1;
+		}
+		if (it->size != (ite - 1)->size)
+		{
+			return (pairs.size() - 1);
+		}
+		return pairs.size();
+	}
+
 
 	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
 	{
@@ -201,6 +245,34 @@ namespace deque
 		return os;
 	}
 
+	void	sort(deque::u_int& nbs)
+	{
+		static std::size_t i = 1;
+		while (1)//size > 1 && i < 5)
+		{
+			std::cout << "i= " << i << std::endl;
+			deque::pair pairs;
+			pairs = createPairs(nbs, i);
+			std::size_t size = deque::getPairsSize(pairs);
+			std::cout << "size= " << size << std::endl;
+			std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
+			std::cout << "CREATE" << std::endl;
+			std::cout << pairs << std::endl;
+			findBiggest(pairs);
+			std::cout << "BIGGEST" << std::endl;
+			std::cout << pairs << std::endl;
+			std::cout << "gps= " << size << std::endl;
+			++i;
+			if (size != 1)
+			{
+				sort(nbs);
+				std::cout << "BONJOUR" << std::endl;
+			}
+			std::cout << pairs << std::endl;
+			if (size == 1)
+				break ;
+		}
+	}
 
 	/**
 	 * 
@@ -228,33 +300,12 @@ namespace timer
 }
 
 
-#include <cmath>
-namespace jacobsthal
-{
-	std::size_t getNext(std::size_t ji)
-	{
-		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
-	}
-
-	std::size_t getNumber(std::size_t size)
-	{
-		if (size == 0)
-			return 0;
-		if (size == 1)
-			return 1;
-		std::size_t ji = 1;
-		std::size_t jn = getNext(ji);
-		std::size_t save;
-		while (jn < size)
-		{
-			save = jn;
-			++ji;
-			jn = getNext(ji);
-		}
-		return save;
-	}
-}
-
+// TODO:
+/**
+ * add recursion
+ * find stop condition for it //? maybe when nbGroup == 1
+ * add jacobsthal number to the insertion
+ */
 int main(int argc, char **argv)
 {
 	deque::u_int	nbs;
@@ -275,13 +326,14 @@ int main(int argc, char **argv)
 
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
 
-	std::cout << "size= " << nbs.size() << std::endl;
-	std::cout << "jacobsthal= " << jacobsthal::getNumber(nbs.size()) << std::endl;
 
-	deque::pair pairs = deque::createPairs(nbs);
-	std::cout << pairs << std::endl;
-	deque::findBiggest(pairs);
-	std::cout << pairs << std::endl;
+	// deque::pair pairs = deque::createPairs(nbs, std::pow(2, 1)); //! power, so here "1", is recursion level
+	// std::cout << "size= " << deque::getPairsSize(pairs) << std::endl;
+	// std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
+	// std::cout << pairs << std::endl;
+	// deque::findBiggest(pairs);
+	// std::cout << pairs << std::endl;
+	deque::sort(nbs);
 	return 0;
 }
 
