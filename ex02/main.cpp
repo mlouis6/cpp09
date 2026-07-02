@@ -215,7 +215,6 @@ namespace deque
 		// exclude the reminders
 		if (it == ite - 1)
 		{
-			std::cout << "lolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilollolilol" << std::endl;
 			return 1;
 		}
 		if (it->size != (ite - 1)->size)
