@@ -132,9 +132,34 @@ namespace deque
 				++g.size;
 				++it;
 			}
+			// TODO: while with nb recursion
+			// if (it != ite)
+			// {
+			// 	++g.size;
+			// 	++it;
+			// }
+			// if (it != ite)
+			// {
+			// 	++g.size;
+			// 	++it;
+			// }
 			pairs.push_back(g);
 		}
 		return pairs;
+	}
+	
+	void	swap(pair_iter it)
+	{
+		/**
+		 * check first with the one at half (so 0 and pairs.size() / 2)
+		 * swap until half - 1
+		 */
+	
+		for (std::size_t i = 0 ; i < it->size / 2 ; ++i)
+		{
+			std::swap(*(it->begin + i), *((it->begin + i) + (it->size / 2)));
+		}
+
 	}
 
 	void findBiggest(deque::pair& pairs)
@@ -150,20 +175,12 @@ namespace deque
 		{
 			if (*(it->begin) < *(it->begin + (it->size / 2)))
 			{
-				std::swap(*(it->begin), *(it->begin + (it->size / 2)));
+				swap(it);
 			}
 		}
 	}
 
 	//TODO: check before calling for size
-	// void	swap(deque::u_int& nbs, deque::group& pair)
-	// {
-	// 	/**
-	// 	 * ignore last pair if no complete
-	// 	 * check first with the one at half (so 0 and pairs.size() / 2)
-	// 	 * swap until half - 1
-	// 	 */
-	// }
 
 	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
 	{
