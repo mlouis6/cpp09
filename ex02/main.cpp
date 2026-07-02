@@ -155,7 +155,7 @@ namespace deque
 			g.begin = it;
 			// ++g.size;
 			// ++it;
-			int tmp = std::pow(2, recu);
+			int tmp = recu;//std::pow(2, recu);
 			while (tmp > 0)
 			{
 				if (it != ite)
@@ -244,33 +244,102 @@ namespace deque
 		return os;
 	}
 
-	void	sort(deque::u_int& nbs)
+	// void	sort(deque::u_int& nbs)
+	// {
+	// 	static std::size_t i = 1;
+	// 	while (1)//size > 1 && i < 5)
+	// 	{
+	// 		std::cout << "i= " << i << std::endl;
+	// 		deque::pair pairs;
+	// 		pairs = createPairs(nbs, i);
+	// 		std::size_t size = deque::getPairsSize(pairs);
+	// 		std::cout << "size= " << size << std::endl;
+	// 		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
+	// 		std::cout << "CREATE" << std::endl;
+	// 		std::cout << pairs << std::endl;
+	// 		findBiggest(pairs);
+	// 		std::cout << "BIGGEST" << std::endl;
+	// 		std::cout << pairs << std::endl;
+	// 		++i;
+	// 		if (size != 1)
+	// 		{
+	// 			sort(nbs);
+	// 			std::cout << "END RECURSION" << std::endl;
+	// 		}
+	// 		std::cout << pairs << std::endl;
+	// 		if (size == 1)
+	// 			break ;
+	// 	}
+	// }
+
+	void	sort(deque::u_int& nbs, std::size_t nbGroups)
 	{
-		static std::size_t i = 1;
-		while (1)//size > 1 && i < 5)
+		deque::pair pairs = createPairs(nbs, nbGroups);
+		std::size_t size = deque::getPairsSize(pairs);
+		std::cout << "size= " << size << std::endl;
+		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
+		std::cout << "CREATE" << std::endl;
+		std::cout << pairs << std::endl;
+		findBiggest(pairs);
+		std::cout << "BIGGEST" << std::endl;
+		std::cout << pairs << std::endl;
+		if (size <= 1)
+			return ;
+		sort(nbs, nbGroups * 2);
+		std::cout << "END RECURSION" << std::endl;
+		// even number groups (0, 2, 4, ...) = winner
+		// odd = loser
+		// different size or odd total number = remainder
+		deque::pair winners;
+		deque::pair losers;
+		deque::pair remainders;
+		size = deque::getPairsSize(pairs);
+		if (pairs[0].size != pairs[size - 1].size)
+			--size;
+		if (size % 2 != 0)
+			--size;
+		std::size_t i = 0;
+		for ( ; i < size ; ++i)
 		{
-			std::cout << "i= " << i << std::endl;
-			deque::pair pairs;
-			pairs = createPairs(nbs, i);
-			std::size_t size = deque::getPairsSize(pairs);
-			std::cout << "size= " << size << std::endl;
-			std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
-			std::cout << "CREATE" << std::endl;
-			std::cout << pairs << std::endl;
-			findBiggest(pairs);
-			std::cout << "BIGGEST" << std::endl;
-			std::cout << pairs << std::endl;
-			std::cout << "gps= " << size << std::endl;
+			winners.push_back(pairs[i]);
 			++i;
-			if (size != 1)
-			{
-				sort(nbs);
-				std::cout << "BONJOUR" << std::endl;
-			}
-			std::cout << pairs << std::endl;
-			if (size == 1)
-				break ;
+			losers.push_back(pairs[i]);
 		}
+		while (i < deque::getPairsSize(pairs))
+		{
+			remainders.push_back(pairs[i]);
+			++i;
+		}
+		std::cout << "before:" << std::endl;
+		std::cout << "W= " << winners << std::endl;
+		std::cout << "L= " << losers << std::endl;
+		std::cout << "R=" << remainders << std::endl;
+		// for ( ; i < size ; ++i)
+		// {
+		// 	if (*(winners.begin()->begin) > *(losers.begin()->begin))
+		// 	{
+		// 		std::swap(*(winners.begin()), *(losers.begin()));
+		// 	}
+		// 	winners.push_back(*(losers.begin()));
+		// 	losers.pop_back();
+		// }
+		i = 0;
+		size = getPairsSize(winners);
+		for ( ; i < size ; ++i)
+		{
+			if (*(winners[i].begin) > *(losers[i].begin))
+			{
+				std::swap(winners[i].begin, losers[i].begin);
+			}
+			winners.push_back(losers[i]);
+			losers.pop_back();
+		}
+		std::cout << "after:" << std::endl;
+		std::cout << "W= " << winners << std::endl;
+		std::cout << "L= " << losers << std::endl;
+		std::cout << "R=" << remainders << std::endl;
+
+		//? how to determine jacobsthal order
 	}
 
 	/**
@@ -324,6 +393,7 @@ int main(int argc, char **argv)
 	}
 
 	//! ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
+	//! ./PmergeMe "18 75 5 0 100 20 91 3 34 88 2 8 1 11 7 62 4 16 9 4 41 14 6 25"
 
 
 	// deque::pair pairs = deque::createPairs(nbs, std::pow(2, 1)); //! power, so here "1", is recursion level
@@ -332,7 +402,7 @@ int main(int argc, char **argv)
 	// std::cout << pairs << std::endl;
 	// deque::findBiggest(pairs);
 	// std::cout << pairs << std::endl;
-	deque::sort(nbs);
+	deque::sort(nbs, 2);
 	return 0;
 }
 
