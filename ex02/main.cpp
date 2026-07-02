@@ -137,47 +137,33 @@ namespace deque
 		return pairs;
 	}
 
-	void findBiggest(deque::u_int& nbs, deque::pair& pairs)
+	void findBiggest(deque::pair& pairs)
 	{
-
-		deque::pair pairs;
-		ui_iter ite = nbs.end();
-
-		for (ui_iter it = nbs.begin() ; it != ite ; )
+		pair_iter ite = pairs.end();
+		pair_iter it = pairs.begin();
+		// exclude the reminders
+		if (it->size != (ite - 1)->size)
 		{
-			group g;
-			g.begin = it;
-			++g.size;
-			++it;
-			if (it != ite)
-			{
-				++g.size;
-				++it;
-			}
-			pairs.push_back(g);
+			--ite;
 		}
-
-
-		std::deque<int>::iterator site = second.end();
-		std::deque<int>::iterator sit = second.begin();
-		std::deque<int>::iterator fite = first.end();
-		std::deque<int>::iterator fit = first.begin();
-		for (; fit != fite && sit != site; ++sit, ++fit)
+		for ( ; it != ite ; ++it)
 		{
-			if (*sit > *fit)
-				std::swap(*fit, *sit);
+			if (*(it->begin) < *(it->begin + (it->size / 2)))
+			{
+				std::swap(*(it->begin), *(it->begin + (it->size / 2)));
+			}
 		}
 	}
 
 	//TODO: check before calling for size
-	void	swap(deque::u_int& nbs, deque::group& pair)
-	{
-		/**
-		 * ignore last pair if no complete
-		 * check first with the one at half (so 0 and pairs.size() / 2)
-		 * swap until half - 1
-		 */
-	}
+	// void	swap(deque::u_int& nbs, deque::group& pair)
+	// {
+	// 	/**
+	// 	 * ignore last pair if no complete
+	// 	 * check first with the one at half (so 0 and pairs.size() / 2)
+	// 	 * swap until half - 1
+	// 	 */
+	// }
 
 	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
 	{
@@ -277,7 +263,8 @@ int main(int argc, char **argv)
 
 	deque::pair pairs = deque::createPairs(nbs);
 	std::cout << pairs << std::endl;
-
+	deque::findBiggest(pairs);
+	std::cout << pairs << std::endl;
 	return 0;
 }
 

@@ -10,7 +10,7 @@ OBJS := $(addprefix $(OBJS_DIR), $(SRCS:%.cpp=%.o))
 DEPS := $(OBJS:.o=.d)
 
 CXX := c++
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3
 CPPFLAGS := $(addprefix -I,$(INCS)) -MMD -MP
 MAKEFLAGS += --no-print-directory
 
