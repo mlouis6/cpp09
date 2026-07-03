@@ -275,15 +275,13 @@ namespace deque
 	void	sort(deque::u_int& nbs, std::size_t nbGroups)
 	{
 		deque::pair pairs = createPairs(nbs, nbGroups);
-		std::size_t size = deque::getPairsSize(pairs);
-		std::cout << "CREATE" << std::endl;
-		std::cout << pairs << std::endl;
+		std::cout << "CREATE\n"<< pairs << std::endl;
 		findBiggest(pairs);
-		std::cout << "BIGGEST" << std::endl;
-		std::cout << pairs << std::endl;
-		if (size <= 1)
+		std::cout << "BIGGEST\n" << pairs << std::endl;
+		if (deque::getPairsSize(pairs) <= 1)
 			return ;
 		sort(nbs, nbGroups * 2);
+
 		std::cout << "END RECURSION" << std::endl;
 		// even number groups (0, 2, 4, ...) = winner
 		// odd = loser
@@ -291,12 +289,13 @@ namespace deque
 		deque::pair winners;
 		deque::pair losers;
 		deque::pair remainders;
-		size = deque::getPairsSize(pairs);
+		std::size_t size = deque::getPairsSize(pairs);
 		if (pairs[0].size != pairs[size - 1].size)
 			--size;
 		if (size % 2 != 0)
 			--size;
 		std::size_t i = 0;
+		std::cout << "size pairs= " << size << std::endl;
 		for ( ; i < size ; ++i)
 		{
 			winners.push_back(pairs[i]);
@@ -312,34 +311,41 @@ namespace deque
 		std::cout << "W= " << winners << std::endl;
 		std::cout << "L= " << losers << std::endl;
 		std::cout << "R=" << remainders << std::endl;
+		std::cout << "size= " << getPairsSize(winners) << std::endl;
+		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(losers)) << std::endl;
+		//! indices
+		// i = 0;
 		// for ( ; i < size ; ++i)
 		// {
-		// 	if (*(winners.begin()->begin) > *(losers.begin()->begin))
+		// 	if (*(winners[i].begin) > *(losers[i].begin))
 		// 	{
-		// 		std::swap(*(winners.begin()), *(losers.begin()));
+		// 		std::swap(winners[i].begin, losers[i].begin);
 		// 	}
-		// 	winners.push_back(*(losers.begin()));
-		// 	losers.pop_back();
+		// 	winners.push_back(losers[i]);
+		// 	losers.pop_back(); // TODO: probably need iterator cause that wont work
 		// }
-		i = 0;
-		size = getPairsSize(winners);
-		std::cout << "size= " << size << std::endl;
-		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(losers)) << std::endl;
-		for ( ; i < size ; ++i)
+		//! iterators
+		pair_iter w_ite = winners.end();
+		pair_iter w_it = winners.begin();
+		// pair_iter l_ite = losers.end();
+		pair_iter l_it = losers.begin();
+		for ( ; w_it != w_ite ; ++w_it)
 		{
-			if (*(winners[i].begin) > *(losers[i].begin))
+			// pair_iter l_ite = losers.end();
+			if (*(w_it->begin) > *(l_it->begin))
 			{
-				std::swap(winners[i].begin, losers[i].begin);
+				std::swap(w_it->begin, l_it->begin);
 			}
-			winners.push_back(losers[i]);
-			losers.pop_front(); // TODO: probably need iterator cause that wont work
+			winners.push_back(*l_it);
+			losers.pop_front(); // erase(l_it);
+			l_it = losers.begin();
 		}
 		std::cout << "after:" << std::endl;
 		std::cout << "W= " << winners << std::endl;
 		std::cout << "L= " << losers << std::endl;
 		std::cout << "R=" << remainders << std::endl;
 
-		//? how to determine jacobsthal order
+		std::cout << pairs << std::endl;		
 	}
 
 	/**
@@ -402,7 +408,9 @@ int main(int argc, char **argv)
 	// std::cout << pairs << std::endl;
 	// deque::findBiggest(pairs);
 	// std::cout << pairs << std::endl;
+	unsigned long base = timer::start();
 	deque::sort(nbs, 2);
+	std::cout << timer::stop(base) << "us" << std::endl;
 	return 0;
 }
 
