@@ -276,8 +276,6 @@ namespace deque
 	{
 		deque::pair pairs = createPairs(nbs, nbGroups);
 		std::size_t size = deque::getPairsSize(pairs);
-		std::cout << "size= " << size << std::endl;
-		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pairs)) << std::endl;
 		std::cout << "CREATE" << std::endl;
 		std::cout << pairs << std::endl;
 		findBiggest(pairs);
@@ -325,6 +323,8 @@ namespace deque
 		// }
 		i = 0;
 		size = getPairsSize(winners);
+		std::cout << "size= " << size << std::endl;
+		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(losers)) << std::endl;
 		for ( ; i < size ; ++i)
 		{
 			if (*(winners[i].begin) > *(losers[i].begin))
@@ -332,7 +332,7 @@ namespace deque
 				std::swap(winners[i].begin, losers[i].begin);
 			}
 			winners.push_back(losers[i]);
-			losers.pop_back();
+			losers.pop_front(); // TODO: probably need iterator cause that wont work
 		}
 		std::cout << "after:" << std::endl;
 		std::cout << "W= " << winners << std::endl;
