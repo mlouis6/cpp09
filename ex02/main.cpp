@@ -286,64 +286,97 @@ namespace deque
 		// even number groups (0, 2, 4, ...) = winner
 		// odd = loser
 		// different size or odd total number = remainder
-		deque::pair winners;
-		deque::pair losers;
-		deque::pair remainders;
-		std::size_t size = deque::getPairsSize(pairs);
-		if (pairs[0].size != pairs[size - 1].size)
-			--size;
-		if (size % 2 != 0)
-			--size;
-		std::size_t i = 0;
-		std::cout << "size pairs= " << size << std::endl;
-		for ( ; i < size ; ++i)
-		{
-			winners.push_back(pairs[i]);
-			++i;
-			losers.push_back(pairs[i]);
-		}
-		while (i < deque::getPairsSize(pairs))
-		{
-			remainders.push_back(pairs[i]);
-			++i;
-		}
-		std::cout << "before:" << std::endl;
-		std::cout << "W= " << winners << std::endl;
-		std::cout << "L= " << losers << std::endl;
-		std::cout << "R=" << remainders << std::endl;
-		std::cout << "size= " << getPairsSize(winners) << std::endl;
-		std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(losers)) << std::endl;
-		//! indices
-		// i = 0;
+		/** start w/l/r */
+		// deque::pair winners;
+		// deque::pair losers;
+		// deque::pair remainders;
+		// std::size_t size = deque::getPairsSize(pairs);
+		// if (pairs[0].size != pairs[size - 1].size)
+		// 	--size;
+		// if (size % 2 != 0)
+		// 	--size;
+		// std::size_t i = 0;
+		// std::cout << "size pairs= " << size << std::endl;
 		// for ( ; i < size ; ++i)
 		// {
-		// 	if (*(winners[i].begin) > *(losers[i].begin))
-		// 	{
-		// 		std::swap(winners[i].begin, losers[i].begin);
-		// 	}
-		// 	winners.push_back(losers[i]);
-		// 	losers.pop_back(); // TODO: probably need iterator cause that wont work
+		// 	winners.push_back(pairs[i]);
+		// 	++i;
+		// 	losers.push_back(pairs[i]);
 		// }
-		//! iterators
-		pair_iter w_ite = winners.end();
-		pair_iter w_it = winners.begin();
-		// pair_iter l_ite = losers.end();
-		pair_iter l_it = losers.begin();
-		for ( ; w_it != w_ite ; ++w_it)
-		{
-			// pair_iter l_ite = losers.end();
-			if (*(w_it->begin) > *(l_it->begin))
-			{
-				std::swap(w_it->begin, l_it->begin);
-			}
-			winners.push_back(*l_it);
-			losers.pop_front(); // erase(l_it);
-			l_it = losers.begin();
-		}
-		std::cout << "after:" << std::endl;
-		std::cout << "W= " << winners << std::endl;
-		std::cout << "L= " << losers << std::endl;
-		std::cout << "R=" << remainders << std::endl;
+		// while (i < deque::getPairsSize(pairs))
+		// {
+		// 	remainders.push_back(pairs[i]);
+		// 	++i;
+		// }
+		// std::cout << "before:" << std::endl;
+		// std::cout << "W= " << winners << std::endl;
+		// std::cout << "L= " << losers << std::endl;
+		// std::cout << "R=" << remainders << std::endl;
+		// std::cout << "size= " << getPairsSize(winners) << std::endl;
+		// std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(losers)) << std::endl;
+		// //! indices
+		// // i = 0;
+		// // for ( ; i < size ; ++i)
+		// // {
+		// // 	if (*(winners[i].begin) > *(losers[i].begin))
+		// // 	{
+		// // 		std::swap(winners[i].begin, losers[i].begin);
+		// // 	}
+		// // 	winners.push_back(losers[i]);
+		// // 	losers.pop_back(); // TODO: probably need iterator cause that wont work
+		// // }
+		// //! iterators
+		// pair_iter w_ite = winners.end();
+		// pair_iter w_it = winners.begin();
+		// // pair_iter l_ite = losers.end();
+		// pair_iter l_it = losers.begin();
+		// for ( ; w_it != w_ite ; ++w_it)
+		// {
+		// 	// pair_iter l_ite = losers.end();
+		// 	if (*(w_it->begin) > *(l_it->begin))
+		// 	{
+		// 		std::swap(w_it->begin, l_it->begin);
+		// 	}
+		// 	winners.push_back(*l_it);
+		// 	losers.pop_front(); // erase(l_it);
+		// 	l_it = losers.begin();
+		// }
+		// std::cout << "after:" << std::endl;
+		// std::cout << "W= " << winners << std::endl;
+		// std::cout << "L= " << losers << std::endl;
+		// std::cout << "R=" << remainders << std::endl;
+		/** end */
+		
+		/** start with same list pairs */
+
+		// std::size_t size = deque::getPairsSize(pairs);
+		// if (pairs[0].size != pairs[size - 1].size)
+		// 	--size;
+		// if (size % 2 != 0)
+		// 	--size;
+		// std::size_t i = 0;
+		// std::cout << "size pairs= " << size << std::endl;
+		// for ( ; i < size ; ++i)
+		// {
+		// 	std::cout << "main" << pairs.begin() + i << std::endl;
+		// 	++i;
+		// 	std::cout << "pending" << pairs.begin() + i << std::endl;
+		// }
+		// while (i < deque::getPairsSize(pairs))
+		// {
+		// 	std::cout << "remainder" << pairs.begin() + i << std::endl;
+		// 	++i;
+		// }
+		// std::cout << "before:" << std::endl;
+		// std::cout << "main= "; << main << std::endl;
+		// std::cout << "pending= " << pending << std::endl;
+		// std::cout << "size= " << getPairsSize(pending) << std::endl;
+		// std::cout << "jacobsthal= " << jacobsthal::getNumber(deque::getPairsSize(pending)) << std::endl;
+		// std::cout << "after:" << std::endl;
+
+		/** end */
+
+		
 
 		std::cout << pairs << std::endl;		
 	}
