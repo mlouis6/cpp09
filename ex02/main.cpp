@@ -144,7 +144,7 @@ namespace deque
 		return nbs;
 	}
 
-	deque::pair createPairs(deque::u_int& nbs, int recu)
+	deque::pair createPairs(deque::u_int& nbs, int pairSize)
 	{
 		deque::pair pairs;
 		ui_iter ite = nbs.end();
@@ -153,9 +153,7 @@ namespace deque
 		{
 			group g;
 			g.begin = it;
-			// ++g.size;
-			// ++it;
-			int tmp = recu;//std::pow(2, recu);
+			int tmp = pairSize; //! dont change
 			while (tmp > 0)
 			{
 				if (it != ite)
@@ -165,17 +163,6 @@ namespace deque
 				}
 				--tmp;
 			}
-			// TODO: while with nb recursion
-			// if (it != ite)
-			// {
-			// 	++g.size;
-			// 	++it;
-			// }
-			// if (it != ite)
-			// {
-			// 	++g.size;
-			// 	++it;
-			// }
 			pairs.push_back(g);
 		}
 		return pairs;
@@ -242,6 +229,14 @@ namespace deque
 			os << "]" << std::endl;
 		}
 		return os;
+	}
+
+	std::ostream&	operator<<(std::ostream& os, const deque::u_int& nbs)
+	{
+		c_iter ite = nbs.end();
+		for (c_iter it = nbs.begin() ; it != ite ; ++it)
+			std::cout << *it << " ";
+		std::cout << std::endl;
 	}
 
 	// void	sort(deque::u_int& nbs)
@@ -375,10 +370,50 @@ namespace deque
 		// std::cout << "after:" << std::endl;
 
 		/** end */
+		std::cout << nbs << std::endl;
+		std::cout << pairs << std::endl;
 
+		/**
+		 * A0 A1 A2 A3 A4
+		 * B0 B1 B2 B3 B4
+		 * R0
+		 * 
+		 * to insert B0:
+		 * find A0
+		 * insert B0 before A0
+		 * push everything back
+		 * no insert, no erase
+		 */
+		/**
+		 * END RECURSION
+		 * grp A | grp B 
+		 * [88, 7, 11, 3]
+		 * [34, 9, 14, 2]
+		 * [41, 6, 8, 4]
+		 * remainders
+		 * [85]
+		 */
+		/**
+		 * need tmp_nbs for the main chain
+		 * so no modification in nbs, so pairs are still significant
+		 * 
+		 */
+
+		// deque::u_int tmp;
+
+		// std::size_t size = deque::getPairsSize(pairs);
+		// if (pairs[0].size != pairs[size - 1].size)
+		// 	--size;
+		// if (size % 2 != 0)
+		// 	--size;
+		// std::size_t i = 0;
+		// for ( ; i < size ; ++i)
+		// {
+		// 	if (i % 2 == 0)
+		// 		tmp.push_back();
+		// }
 		
 
-		std::cout << pairs << std::endl;		
 	}
 
 	/**
