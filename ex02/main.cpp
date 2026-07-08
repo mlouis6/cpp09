@@ -127,9 +127,9 @@ namespace deque
 	typedef deque::pair::const_iterator 	cp_iter;
 	typedef deque::pair::iterator 			pair_iter;
 
-	deque::u_int init(char *args)
+	std::deque<unsigned int> init(char *args)
 	{
-		deque::u_int nbs;
+		std::deque<unsigned int> nbs;
 		std::istringstream iss(args);
 		while (!iss.eof())
 		{
@@ -139,6 +139,8 @@ namespace deque
 			{
 				throw std::runtime_error("Error: argument contains a none positive integer");
 			}
+			std::deque<unsigned int> it = std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val))
+			if ()
 			nbs.push_back(static_cast<unsigned int>(val));
 		}
 		return nbs;
