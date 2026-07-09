@@ -1,5 +1,11 @@
 #!/bin/bash
 
+make
+if [ $? -ne 0 ]; then
+	echo "couldn't make"
+	exit $?
+fi
+
 timeout --kill-after=1s 5s ./PmergeMe "14 2 9 34 3 11 88 7 41 6 8 4 85"
 
 if [ $? -eq 124 ]; then
