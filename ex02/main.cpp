@@ -127,23 +127,29 @@ namespace deque
 	typedef deque::pair::const_iterator 	cp_iter;
 	typedef deque::pair::iterator 			pair_iter;
 
-	deque::u_int init(char *args)
+	deque::u_int init(char **args, int nb_args)
 	{
 		deque::u_int nbs;
-		std::istringstream iss(args);
-		while (!iss.eof())
+
+		for (int i = 1 ; i < nb_args ; ++i)
 		{
-			unsigned long val;
-			iss >> val;
-			if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
+			std::istringstream iss(args[i]);
+			if (args[i][0] == 0)
+				continue ;
+			while (!iss.eof())
 			{
-				throw std::runtime_error("Error: argument contains a none positive integer");
-			}
-			if (nbs.empty())
-				nbs.push_back(static_cast<unsigned int>(val));
-			else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
-			{
-				nbs.push_back(static_cast<unsigned int>(val));
+				unsigned long val;
+				iss >> val;
+				if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
+				{
+					throw std::runtime_error("Error: argument contains a none positive integer");
+				}
+				if (nbs.empty())
+					nbs.push_back(static_cast<unsigned int>(val));
+				else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
+				{
+					nbs.push_back(static_cast<unsigned int>(val));
+				}
 			}
 		}
 		return nbs;
@@ -457,14 +463,14 @@ namespace timer
 int main(int argc, char **argv)
 {
 	deque::u_int	nbs;
-	if (argc != 2 || argv[1][0] == 0)
+	if (argc < 2)
 	{
-		std::cerr << "Error: usage './PmergeMe \"<positive integers>\"'" << std::endl;
+		std::cerr << "Error: usage `./PmergeMe <positive integers>`" << std::endl;
 		return 1;
 	}
 	try
 	{
-		nbs = deque::init(argv[1]);
+		nbs = deque::init(argv, argc);
 	}
 	catch (const std::exception &e)
 	{

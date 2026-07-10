@@ -14,6 +14,15 @@ fi
 
 timeout --kill-after=1s 5s ./PmergeMe "18 75 5 0 100 20 91 3 34 88 2 8 1 11 7 62 4 16 9 4 41 14 6 25"
 
+
+timeout --kill-after=1s 5s ./PmergeMe 14 2 9 34 3 11 88 7 41 6 8 4 85
+
+if [ $? -eq 124 ]; then
+	echo "timed out (1)"
+fi
+
+timeout --kill-after=1s 5s ./PmergeMe 18 75 5 0 100 20 91 3 34 88 2 8 1 11 7 62 4 16 9 4 41 14 6 25
+
 if [ $? -eq 124 ]; then
 	echo "timed out (2)"
 fi
