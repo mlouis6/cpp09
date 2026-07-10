@@ -142,13 +142,17 @@ namespace deque
 				iss >> val;
 				if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
 				{
-					throw std::runtime_error("Error: argument contains a none positive integer");
+					throw std::runtime_error("Error: argument must be a positive integer (not `" + iss.str() + "`)");
 				}
 				if (nbs.empty())
 					nbs.push_back(static_cast<unsigned int>(val));
 				else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
 				{
 					nbs.push_back(static_cast<unsigned int>(val));
+				}
+				else
+				{
+					std::cout << "Warning: duplicate (" << static_cast<unsigned int>(val) << "), only one occurence added to the list to be sorted" << std::endl;
 				}
 			}
 		}
@@ -413,11 +417,11 @@ namespace deque
 
 		// deque::u_int tmp;
 
-		// std::size_t size = deque::getPairsSize(pairs);
-		// if (pairs[0].size != pairs[size - 1].size)
-		// 	--size;
-		// if (size % 2 != 0)
-		// 	--size;
+		std::size_t size = deque::getPairsSize(pairs);
+		if (pairs[0].size != pairs[size - 1].size)
+			--size;
+		if (size % 2 != 0)
+			--size;
 		// std::size_t i = 0;
 		// for ( ; i < size ; ++i)
 		// {
@@ -425,6 +429,9 @@ namespace deque
 		// 		tmp.push_back();
 		// }
 		
+
+		std::cout << "start: " << *(pairs[0].begin) << std::endl;
+		std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
 
 	}
 
