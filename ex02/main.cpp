@@ -753,17 +753,14 @@ namespace deque
 		std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
 
 		deque::u_int main;
-		for (std::size_t i = 0 ; i < size ; ++i)
+		std::size_t nb_pairs =  getPairsSize(pairs);
+		cp_iter it = pairs.begin();
+		for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
 		{
-			cp_iter ite = pairs.end();
-			cp_iter it = pairs.begin();
-			for (; it != ite; ++it)
+			c_iter	iter = it->begin;
+			for (std::size_t j = 0 ; j < it->size / 2 ; ++j, ++iter)
 			{
-				c_iter	iter = it->begin;
-				for (std::size_t i = 0 ; i < it->size / 2 - 1 ; ++i, ++iter)
-				{
-					main.push_back(*iter);
-				}
+				main.push_back(*iter);
 			}
 		}
 
