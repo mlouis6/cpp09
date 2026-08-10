@@ -7,17 +7,16 @@
 class RPN
 {
 	public:
-		RPN();
-		// RPN(...);
-		RPN(RPN& other);
-		RPN& operator=(RPN& other);
 		~RPN();
-
-		int	calculate(char* args);
-		bool			err;
+		static int	calculate(char* args);
 
 	private:
-		std::stack<int, std::list<int> >	m_nbs;
+		RPN();
+		RPN(RPN& other);
+		// RPN(char* args);
+		RPN& operator=(RPN& other);
+
+		static std::stack<int, std::list<int> >	m_nbs;
 
 };
 
