@@ -88,5 +88,8 @@ int	RPN::calculate(char* args)
 	}
 	if (m_nbs.size() > 1)
 		throw std::runtime_error("Not enough operators");
-	return static_cast<int> (m_nbs.top());
+	res = m_nbs.top();
+	while (!m_nbs.empty())
+		m_nbs.pop();
+	return static_cast<int> (res);
 }
