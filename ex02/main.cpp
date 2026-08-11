@@ -556,6 +556,11 @@ difference between the two containers used.
 #include <cmath>
 namespace jacobsthal
 {
+	std::size_t getPrevious(std::size_t ji)
+	{
+		// return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
+	}
+
 	std::size_t getNext(std::size_t ji)
 	{
 		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
@@ -763,6 +768,24 @@ namespace deque
 				main.push_back(*iter);
 			}
 		}
+		//! for B0
+		for (std::size_t i = pairs.begin()->size - 1 ; i > pairs.begin()->size / 2 - 1; --i)
+			main.push_front(*(pairs.begin()->begin + i));
+		//! end B0
+
+		// 1 - jacobsthal -> which group to insert
+		// 2 - binary search -> where the group goes
+
+		/**
+		 * jacobsthal
+		 * Bi
+		 * find Ai
+		 * binary search before Ai
+		 * insert Bi
+		 */
+
+
+		 // insert B0 before A0 directly
 
 		std::cout << "\nMAIN= " << std::endl;
 		std::cout << main << std::endl;
