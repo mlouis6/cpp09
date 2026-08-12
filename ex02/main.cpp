@@ -556,10 +556,10 @@ difference between the two containers used.
 #include <cmath>
 namespace jacobsthal
 {
-	std::size_t getPrevious(std::size_t ji)
-	{
-		// return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
-	}
+	// std::size_t getPrevious(std::size_t ji)
+	// {
+	// 	// return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
+	// }
 
 	std::size_t getNext(std::size_t ji)
 	{
@@ -758,14 +758,22 @@ namespace deque
 		std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
 
 		deque::u_int main;
+		deque::u_int a_deq;
+		deque::u_int b_deq;
 		std::size_t nb_pairs =  getPairsSize(pairs);
 		cp_iter it = pairs.begin();
 		for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
 		{
 			c_iter	iter = it->begin;
-			for (std::size_t j = 0 ; j < it->size / 2 ; ++j, ++iter)
+			std::size_t j = 0;
+			for (; j < it->size / 2 ; ++j, ++iter)
 			{
 				main.push_back(*iter);
+				a_deq.push_back(*iter);
+			}
+			for ( ; j < it->size ; ++j, ++iter)
+			{
+				b_deq.push_back(*iter);
 			}
 		}
 		//! for B0
@@ -784,12 +792,47 @@ namespace deque
 		 * insert Bi
 		 */
 
+		std::cout << "jaja (" << nb_pairs << ")" << std::endl;
+		std::size_t j_order[nb_pairs - 1];
+		std::size_t nbJaco;
+		std::size_t prev_Jaco = 1;std::size_t j = 0;
+		for (std::size_t i = 2 ; i <= nb_pairs ; ++i)
+		{
+			nbJaco = jacobsthal::getNumber(i);
+			while (nbJaco == prev_Jaco && i <= nb_pairs)
+			{
+				++i;
+				nbJaco = jacobsthal::getNumber(i);
+			}
+			std::size_t tmp = nbJaco;
+			if (nbJaco > 2 && nbJaco <= nb_pairs)
+			{
+				for (; prev_Jaco < nbJaco ; --nbJaco, ++j)
+				{
+						j_order[j] = nbJaco - 1;
+				}
+			}
+			prev_Jaco = tmp;
+		}
+		for (std::size_t i = 0 ; i < nb_pairs - 1 ; ++i)
+		{
+			std::cout << j_order[i] << ", ";
+		}
+		std::cout << std::endl;
+
+		std::cout << "jaja" << std::endl;
 
 		 // insert B0 before A0 directly
 
 		std::cout << "\nMAIN= " << std::endl;
 		std::cout << main << std::endl;
 		std::cout << "endMAIN" << std::endl;
+		std::cout << "\nA list= " << std::endl;
+		std::cout << a_deq << std::endl;
+		std::cout << "endA list" << std::endl;
+		std::cout << "\nB list= " << std::endl;
+		std::cout << b_deq << std::endl;
+		std::cout << "endB list" << std::endl;
 		exit (1);
 	}
 
