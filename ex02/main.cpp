@@ -736,7 +736,21 @@ namespace deque
 		std::cout << "BIGGEST\n" << pairs << std::endl;
 		if (deque::getPairsSize(pairs) <= 1)
 			return ;
+
+		// TODO: sort crescendo order the pairs
+		/**
+		 * GUESS WHERE
+		 * 
+		 * HERE
+		 * HERE
+		 * HERE
+		 * HERE
+		 * 
+		 * (i dont want to)
+		 */
 		sort(nbs, nbGroups * 2);
+
+		pairs = createPairs(nbs, nbGroups);
 
 		std::cout << "END RECURSION" << std::endl;
 
@@ -758,23 +772,36 @@ namespace deque
 		std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
 
 		deque::u_int main;
-		deque::u_int a_deq;
-		deque::u_int b_deq;
+		deque::pair a_deq;
+		deque::pair b_deq;
 		std::size_t nb_pairs =  getPairsSize(pairs);
 		cp_iter it = pairs.begin();
 		for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
 		{
 			c_iter	iter = it->begin;
 			std::size_t j = 0;
+			
+			group a_grp;
+			a_grp.begin = it->begin;
+			a_grp.size = it->size / 2;
+
+
+			group b_grp;
+			b_grp.begin = it->begin + (it->size / 2);
+			b_grp.size = it->size / 2;
+
+			a_deq.push_back(a_grp);
+			b_deq.push_back(b_grp);
 			for (; j < it->size / 2 ; ++j, ++iter)
 			{
 				main.push_back(*iter);
-				a_deq.push_back(*iter);
+				// a_deq.push_back(*iter);
 			}
-			for ( ; j < it->size ; ++j, ++iter)
-			{
-				b_deq.push_back(*iter);
-			}
+			// for ( ; j < it->size ; ++j, ++iter)
+			// {
+			// 	b_deq.push_back(*iter);
+			// }
+
 		}
 		//! for B0
 		for (std::size_t i = pairs.begin()->size - 1 ; i > pairs.begin()->size / 2 - 1; --i)
@@ -793,9 +820,9 @@ namespace deque
 		 */
 
 		std::cout << "jaja (" << nb_pairs << ")" << std::endl;
-		std::size_t j_order[nb_pairs - 1];
+		std::deque<int> j_order;
 		std::size_t nbJaco;
-		std::size_t prev_Jaco = 1;std::size_t j = 0;
+		std::size_t prev_Jaco = 1;
 		for (std::size_t i = 2 ; i <= nb_pairs ; ++i)
 		{
 			nbJaco = jacobsthal::getNumber(i);
@@ -807,22 +834,29 @@ namespace deque
 			std::size_t tmp = nbJaco;
 			if (nbJaco > 2 && nbJaco <= nb_pairs)
 			{
-				for (; prev_Jaco < nbJaco ; --nbJaco, ++j)
+				for (; prev_Jaco < nbJaco ; --nbJaco)
 				{
-						j_order[j] = nbJaco - 1;
+						j_order.push_back(nbJaco - 1);
 				}
 			}
 			prev_Jaco = tmp;
 		}
-		for (std::size_t i = 0 ; i < nb_pairs - 1 ; ++i)
+		if (!j_order.empty())
 		{
-			std::cout << j_order[i] << ", ";
+			for (std::size_t i = 0 ; i < nb_pairs - 1 ; ++i)
+			{
+				std::cout << j_order[i] << ", ";
+			}
+			std::cout << std::endl;
 		}
-		std::cout << std::endl;
 
 		std::cout << "jaja" << std::endl;
 
-		 // insert B0 before A0 directly
+		// insert B0 before A0 directly
+
+		// TODO: binary search
+
+		
 
 		std::cout << "\nMAIN= " << std::endl;
 		std::cout << main << std::endl;
@@ -833,7 +867,7 @@ namespace deque
 		std::cout << "\nB list= " << std::endl;
 		std::cout << b_deq << std::endl;
 		std::cout << "endB list" << std::endl;
-		exit (1);
+		// exit (1);
 	}
 
 	/**
