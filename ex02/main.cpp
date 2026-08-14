@@ -635,7 +635,7 @@ namespace deque
 		return nbs;
 	}
 
-	deque::pair createPairs(deque::u_int& nbs, int pairSize)
+	deque::pair initPairs(deque::u_int& nbs)
 	{
 		deque::pair pairs;
 		ui_iter ite = nbs.end();
@@ -644,7 +644,7 @@ namespace deque
 		{
 			group g;
 			g.begin = it;
-			int tmp = pairSize;
+			int tmp = 2;
 			while (tmp > 0)
 			{
 				if (it != ite)
@@ -728,152 +728,198 @@ namespace deque
 		return os;
 	}
 
-	void	sort(deque::u_int& nbs, std::size_t nbGroups)
+	deque::pair createPairs(const deque::pair& pairs)
 	{
-		deque::pair pairs = createPairs(nbs, nbGroups);
+		deque::pair newPairs;
+		std::size_t i = 0;
+		for ( ; i < pairs.size() - 1 ; i += 2)
+		{
+			group g;
+
+			g.begin = pairs[i].begin;
+			g.size = pairs[i].size + pairs[i + 1].size;
+
+			newPairs.push_back(g);
+		}
+		
+		if (i < pairs.size())
+			newPairs.push_back(pairs[i]);
+
+		return newPairs;
+	}
+
+	void orderPairs(deque::pair& pairs, const deque::pair& newPairs)
+	{
+		deque::pair ordered;
+
+		for (cp_iter it = newPairs.begin() ; it != newPairs.end() ; ++it)
+		{
+			for (cp_iter it2 = pairs.begin() ; it2 != pairs.end() ; ++it2)
+			{
+				if (it2->begin == it->begin)
+				{
+					ordered.push_back(*it2);
+					if (it->size == it2->size * 2)
+					{
+						++it2;
+						if (it2 != pairs.end())
+							ordered.push_back(*it2);
+					}
+					break ;
+				}
+			}
+		}
+
+		pairs = ordered;
+	}
+
+	void	sort(deque::pair& pairs)
+	{
 		std::cout << "CREATE\n"<< pairs << std::endl;
 		findBiggest(pairs);
 		std::cout << "BIGGEST\n" << pairs << std::endl;
+		if (deque::getPairsSize(pairs) == 2)
+		{
+			pair_iter it1 = pairs.begin();
+			pair_iter it2 = it1 + 1;
+
+			if (*(it1->begin) > *(it2->begin))
+				std::swap(*it1, *it2);
+
+			return;
+		}
+		
 		if (deque::getPairsSize(pairs) <= 1)
 			return ;
 
-		// TODO: sort crescendo order the pairs
-		/**
-		 * GUESS WHERE
-		 * 
-		 * HERE
-		 * HERE
-		 * HERE
-		 * HERE
-		 * 
-		 * (i dont want to)
-		 */
-		sort(nbs, nbGroups * 2);
 
-		pairs = createPairs(nbs, nbGroups);
+		deque::pair newPairs = createPairs(pairs);
+		sort(newPairs);
+		orderPairs(pairs, newPairs);
+
+		// pairs = createPairs(nbs, nbGroups);
+
+		/** order order winner winner */
 
 		std::cout << "END RECURSION" << std::endl;
 
-		std::cout << nbs << std::endl;
+		// std::cout << nbs << std::endl;
 		std::cout << pairs << std::endl;
 
-		std::size_t size = deque::getPairsSize(pairs);
-		if (pairs[0].size != pairs[size - 1].size)
-			--size;
-		if (size % 2 != 0)
-			--size;
+	// 	std::size_t size = deque::getPairsSize(pairs);
+	// 	if (pairs[0].size != pairs[size - 1].size)
+	// 		--size;
+	// 	if (size % 2 != 0)
+	// 		--size;
 
-		std::cout << "Jacobsthal" << std::endl;
-		std::cout << "curr= " << jacobsthal::getNumber(size) << std::endl;
-		std::cout << "next= " << jacobsthal::getNumber(size) << std::endl;
-		std::cout << "end Jacobsthal" << std::endl;
+	// 	std::cout << "Jacobsthal" << std::endl;
+	// 	std::cout << "curr= " << jacobsthal::getNumber(size) << std::endl;
+	// 	std::cout << "next= " << jacobsthal::getNumber(size) << std::endl;
+	// 	std::cout << "end Jacobsthal" << std::endl;
 
-		std::cout << "start: " << *(pairs[0].begin) << std::endl;
-		std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
+	// 	std::cout << "start: " << *(pairs[0].begin) << std::endl;
+	// 	std::cout << "end: " << *(pairs[size - 1].begin + pairs[size - 1].size - 1 ) << std::endl;
 
-		deque::u_int main;
-		deque::pair a_deq;
-		deque::pair b_deq;
-		std::size_t nb_pairs =  getPairsSize(pairs);
-		cp_iter it = pairs.begin();
-		for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
-		{
-			c_iter	iter = it->begin;
-			std::size_t j = 0;
+	// 	deque::u_int main;
+	// 	deque::pair a_deq;
+	// 	deque::pair b_deq;
+	// 	std::size_t nb_pairs =  getPairsSize(pairs);
+	// 	cp_iter it = pairs.begin();
+	// 	for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
+	// 	{
+	// 		c_iter	iter = it->begin;
+	// 		std::size_t j = 0;
 			
-			group a_grp;
-			a_grp.begin = it->begin;
-			a_grp.size = it->size / 2;
+	// 		group a_grp;
+	// 		a_grp.begin = it->begin;
+	// 		a_grp.size = it->size / 2;
 
 
-			group b_grp;
-			b_grp.begin = it->begin + (it->size / 2);
-			b_grp.size = it->size / 2;
+	// 		group b_grp;
+	// 		b_grp.begin = it->begin + (it->size / 2);
+	// 		b_grp.size = it->size / 2;
 
-			a_deq.push_back(a_grp);
-			b_deq.push_back(b_grp);
-			for (; j < it->size / 2 ; ++j, ++iter)
-			{
-				main.push_back(*iter);
-				// a_deq.push_back(*iter);
-			}
-			// for ( ; j < it->size ; ++j, ++iter)
-			// {
-			// 	b_deq.push_back(*iter);
-			// }
+	// 		a_deq.push_back(a_grp);
+	// 		b_deq.push_back(b_grp);
+	// 		for (; j < it->size / 2 ; ++j, ++iter)
+	// 		{
+	// 			main.push_back(*iter);
+	// 			// a_deq.push_back(*iter);
+	// 		}
+	// 		// for ( ; j < it->size ; ++j, ++iter)
+	// 		// {
+	// 		// 	b_deq.push_back(*iter);
+	// 		// }
 
-		}
-		//! for B0
-		for (std::size_t i = pairs.begin()->size - 1 ; i > pairs.begin()->size / 2 - 1; --i)
-			main.push_front(*(pairs.begin()->begin + i));
-		//! end B0
+	// 	}
+	// 	//! for B0
+	// 	for (std::size_t i = pairs.begin()->size - 1 ; i > pairs.begin()->size / 2 - 1; --i)
+	// 		main.push_front(*(pairs.begin()->begin + i));
+	// 	//! end B0
 
-		// 1 - jacobsthal -> which group to insert
-		// 2 - binary search -> where the group goes
+	// 	// 1 - jacobsthal -> which group to insert
+	// 	// 2 - binary search -> where the group goes
 
-		/**
-		 * jacobsthal
-		 * Bi
-		 * find Ai
-		 * binary search before Ai
-		 * insert Bi
-		 */
+	// 	/**
+	// 	 * jacobsthal
+	// 	 * Bi
+	// 	 * find Ai
+	// 	 * binary search before Ai
+	// 	 * insert Bi
+	// 	 */
 
-		std::cout << "jaja (" << nb_pairs << ")" << std::endl;
-		std::deque<int> j_order;
-		std::size_t nbJaco;
-		std::size_t prev_Jaco = 1;
-		for (std::size_t i = 2 ; i <= nb_pairs ; ++i)
-		{
-			nbJaco = jacobsthal::getNumber(i);
-			while (nbJaco == prev_Jaco && i <= nb_pairs)
-			{
-				++i;
-				nbJaco = jacobsthal::getNumber(i);
-			}
-			std::size_t tmp = nbJaco;
-			if (nbJaco > 2 && nbJaco <= nb_pairs)
-			{
-				for (; prev_Jaco < nbJaco ; --nbJaco)
-				{
-						j_order.push_back(nbJaco - 1);
-				}
-			}
-			prev_Jaco = tmp;
-		}
-		if (!j_order.empty())
-		{
-			for (std::size_t i = 0 ; i < nb_pairs - 1 ; ++i)
-			{
-				std::cout << j_order[i] << ", ";
-			}
-			std::cout << std::endl;
-		}
+	// 	std::cout << "jaja (" << nb_pairs << ")" << std::endl;
+	// 	std::deque<std::size_t> j_order;
+	// 	std::size_t prev_Jaco = 1;
 
-		std::cout << "jaja" << std::endl;
+	// 	if (nb_pairs > 1)
+	// 		j_order.push_back(1);
 
-		// insert B0 before A0 directly
+	// 	for (std::size_t i = 3 ;  ; ++i)
+	// 	{	
+	// 		std::size_t nbJaco = jacobsthal::getNumber(i);
 
-		// TODO: binary search
+	// 		if (prev_Jaco >= nb_pairs - 1)
+	// 			break ;
+
+	// 		std::size_t end = std::min(nbJaco, nb_pairs - 1);
+
+	// 		for (std::size_t j = end ; j > prev_Jaco ; --j)
+	// 		{
+	// 				j_order.push_back(j);
+	// 		}
+	// 		prev_Jaco = end;
+	// 	}
+	// 	for (std::size_t i = 0 ; i < j_order.size() ; ++i)
+	// 	{
+	// 		std::cout << j_order[i] << ", ";
+	// 	}
+	// 	std::cout << std::endl;
+
+	// 	std::cout << "jaja" << std::endl;
+
+	// 	// insert B0 before A0 directly
+
+	// 	// TODO: binary search
 
 		
 
-		std::cout << "\nMAIN= " << std::endl;
-		std::cout << main << std::endl;
-		std::cout << "endMAIN" << std::endl;
-		std::cout << "\nA list= " << std::endl;
-		std::cout << a_deq << std::endl;
-		std::cout << "endA list" << std::endl;
-		std::cout << "\nB list= " << std::endl;
-		std::cout << b_deq << std::endl;
-		std::cout << "endB list" << std::endl;
-		// exit (1);
+	// 	std::cout << "\nMAIN= " << std::endl;
+	// 	std::cout << main << std::endl;
+	// 	std::cout << "endMAIN" << std::endl;
+	// 	std::cout << "\nA list= " << std::endl;
+	// 	std::cout << a_deq << std::endl;
+	// 	std::cout << "endA list" << std::endl;
+	// 	std::cout << "\nB list= " << std::endl;
+	// 	std::cout << b_deq << std::endl;
+	// 	std::cout << "endB list" << std::endl;
+	// 	// exit (1);
 	}
 
-	/**
-	 * 
-	 * 
-	 */
+	// /**
+	//  * 
+	//  * 
+	//  */
 
 }
 
@@ -921,7 +967,9 @@ int main(int argc, char **argv)
 	}
 
 	unsigned long base = timer::start();
-	deque::sort(nbs, 2);
+	
+	deque::pair pairs = deque::initPairs(nbs);
+	deque::sort(pairs);
 	std::cout << timer::stop(base) << "us" << std::endl;
 	return 0;
 }

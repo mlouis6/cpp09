@@ -9,6 +9,82 @@
 #include <algorithm>
 #include <sys/time.h>
 
+	void	sort(deque::u_int& nbs, std::size_t nbGroups)
+	{
+		deque::pair pairs = createPairs(nbs, nbGroups);
+
+		findBiggest(pairs);
+
+		if (deque::getPairsSize(pairs) <= 1)
+			return ;
+
+		sort(nbs, nbGroups * 2);
+
+		pairs = createPairs(nbs, nbGroups);
+
+		std::cout << nbs << std::endl;
+		std::cout << pairs << std::endl;
+
+		std::size_t size = deque::getPairsSize(pairs);
+		if (pairs[0].size != pairs[size - 1].size)
+			--size;
+		if (size % 2 != 0)
+			--size;
+
+		deque::u_int main;
+		deque::pair a_deq;
+		deque::pair b_deq;
+		std::size_t nb_pairs =  getPairsSize(pairs);
+		cp_iter it = pairs.begin();
+		for (std::size_t i = 0 ; i < nb_pairs; ++i, ++it)
+		{
+			c_iter	iter = it->begin;
+			std::size_t j = 0;
+			
+			group a_grp;
+			a_grp.begin = it->begin;
+			a_grp.size = it->size / 2;
+
+
+			group b_grp;
+			b_grp.begin = it->begin + (it->size / 2);
+			b_grp.size = it->size / 2;
+
+			a_deq.push_back(a_grp);
+			b_deq.push_back(b_grp);
+			for (; j < it->size / 2 ; ++j, ++iter)
+			{
+				main.push_back(*iter);
+			}
+
+		}
+		for (std::size_t i = pairs.begin()->size - 1 ; i > pairs.begin()->size / 2 - 1; --i)
+			main.push_front(*(pairs.begin()->begin + i));
+
+		std::deque<std::size_t> j_order;
+		std::size_t prev_Jaco = 1;
+
+		if (nb_pairs > 1)
+			j_order.push_back(1);
+
+		for (std::size_t i = 3 ;  ; ++i)
+		{	
+			std::size_t nbJaco = jacobsthal::getNumber(i);
+
+			if (prev_Jaco >= nb_pairs - 1)
+				break ;
+
+			std::size_t end = std::min(nbJaco, nb_pairs - 1);
+
+			for (std::size_t j = end ; j > prev_Jaco ; --j)
+			{
+					j_order.push_back(j);
+			}
+			prev_Jaco = end;
+		}
+	}
+}
+
 #include <cmath>
 namespace jacobsthal
 {
