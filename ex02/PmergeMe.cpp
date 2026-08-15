@@ -1,6 +1,6 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe() : m_pairs(), m_remainder(0), m_hasRemainder(false)
+PmergeMe::PmergeMe() : m_pairs(), m_groups(), m_remainder(0), m_hasRemainder(false)
 {
 
 }
@@ -19,9 +19,6 @@ PmergeMe::~PmergeMe()
 {
 
 }
-
-
-
 
 
 // TODO:
@@ -106,87 +103,121 @@ namespace jacobsthal
 	}
 }
 
-	std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
-	{
-		std::deque<unsigned int> nbs;
+std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
+{
+	std::deque<unsigned int> nbs;
 
-		for (int i = 1 ; i < nb_args ; ++i)
+	for (int i = 1 ; i < nb_args ; ++i)
+	{
+		std::istringstream iss(args[i]);
+		if (args[i][0] == 0)
+			continue ;
+		while (!iss.eof())
 		{
-			std::istringstream iss(args[i]);
-			if (args[i][0] == 0)
-				continue ;
-			while (!iss.eof())
+			unsigned long val;
+			iss >> val;
+			if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
 			{
-				unsigned long val;
-				iss >> val;
-				if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
-				{
-					throw std::runtime_error("Error: argument must be a positive integer (not `" + iss.str() + "`)");
-				}
-				if (nbs.empty())
-					nbs.push_back(static_cast<unsigned int>(val));
-				else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
-				{
-					nbs.push_back(static_cast<unsigned int>(val));
-				}
-				else
-				{
-					std::cout << "Warning: duplicate (" << static_cast<unsigned int>(val) << "), only one occurence added to the list to be sorted" << std::endl;
-				}
+				throw std::runtime_error("Error: argument must be a positive integer (not `" + iss.str() + "`)");
 			}
-		}
-		return nbs;
-	}
-
-	std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
-	{
-		std::size_t size = nbs.size();
-		if (size % 2 != 0)
-		{
-			m_hasRemainder = true;
-			--size;
-			m_remainder = nbs[size];
-		}
-		for (std::size_t i = 0 ; i < size ; ++i)
-		{
-			Pair p;
-			if (nbs[i] > nbs[i + 1])
+			if (nbs.empty())
+				nbs.push_back(static_cast<unsigned int>(val));
+			else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
 			{
-				p.a = nbs[i];
-				++i;
-				p.b = nbs[i];
+				nbs.push_back(static_cast<unsigned int>(val));
 			}
 			else
 			{
-				p.b = nbs[i];
-				++i;
-				p.a = nbs[i];
+				std::cout << "Warning: duplicate (" << static_cast<unsigned int>(val) << "), only one occurence added to the list to be sorted" << std::endl;
 			}
-
-			m_pairs.push_back(p);
 		}
-
-		return m_pairs;
 	}
-	
-	std::deque<Group> nextLevelPairs(const std::deque<Pair>& pairs)
+	return nbs;
+}
+
+std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
+{
+	std::size_t size = nbs.size();
+	if (size % 2 != 0)
 	{
-		if (pairs.size() < 2)
+		m_hasRemainder = true;
+		--size;
+		m_remainder = nbs[size];
+	}
+	for (std::size_t i = 0 ; i < size ; ++i)
+	{
+		Pair p;
+		if (nbs[i] > nbs[i + 1])
 		{
-			return pairs;
+			p.a = nbs[i];
+			++i;
+			p.b = nbs[i];
+		}
+		else
+		{
+			p.b = nbs[i];
+			++i;
+			p.a = nbs[i];
 		}
 
+		m_pairs.push_back(p);
 	}
 
-	void PmergeMe::sort(std::deque<Pair>& pairs)
+	return m_pairs;
+}
+
+std::deque<Group> PmergeMe::initGroups(std::deque<Pair>& pairs)
+{
+	std::deque<Group> groups;
+
+	std::size_t size = pairs.size();
+	if (size % 2 != 0)
 	{
-		if (pairs.size() <= 1)
-			return ;
-
-		sort(nextLevelPairs(pairs));
-		// std::deque<Pair> np = nextLevelPairs(pairs);
-		// sort(np);
+		--size;
+		// TODO: probably set a deque<uint> of reminders
+		// m_hasRemainder = true;
+		// --size;
+		// m_remainder = nbs[size];
 	}
+	for (std::size_t i = 0 ; i < size ; ++i)
+	{
+		Group g;
+		if (pairs[i].a > pairs[i + 1].a)
+		{
+			g.pairs.push_back(pairs[i]);
+			++i;
+			g.pairs.push_back(pairs[i]);
+		}
+		else
+		{
+			g.pairs.push_back(pairs[i + 1]);
+			g.pairs.push_back(pairs[i]);
+			++i;
+		}
+
+		groups.push_back(g);
+	}
+
+	return groups;
+}
+
+std::deque<Group> nextLevel(const std::deque<Group>& groups)
+{
+	if (groups.size() < 2)
+	{
+		return groups;
+	}
+	return groups;
+}
+
+void PmergeMe::sort(std::deque<Group>& groups)
+{
+	if (groups.size() <= 1)
+		return ;
+	sort(nextLevel(groups));
+	// std::deque<Pair> np = nextLevelPairs(pairs);
+	// sort(np);
+}
 	
 	// void	swap(pair_iter it)
 	// {

@@ -19,13 +19,13 @@ struct Pair
 	unsigned int b;
 
 	Pair() {}
-	Pair(unsigned int a, unsigned int b) : a(a), b(b);
+	Pair(unsigned int a, unsigned int b) : a(a), b(b) {};
 };
 
 struct Group
 {
 	std::deque<Pair> pairs;
-}
+};
 
 class PmergeMe
 {
@@ -37,11 +37,13 @@ class PmergeMe
 		~PmergeMe();
 		
 		std::deque<Pair> initPairs(std::deque<unsigned int>& nbs);
+		std::deque<Group> initGroups(std::deque<Pair>& pairs);
 		std::deque<unsigned int> init(char **args, int nb_args);
-		void sort(std::deque<Pair>& pairs);
+		void sort(std::deque<Group>& groups);
 
 	private:
 		std::deque<Pair> m_pairs;
+		std::deque<Group> m_groups;
 		unsigned int	m_remainder;
 		bool			m_hasRemainder;
 
