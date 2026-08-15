@@ -17,7 +17,15 @@ struct Pair
 {
 	unsigned int a;
 	unsigned int b;
+
+	Pair() {}
+	Pair(unsigned int a, unsigned int b) : a(a), b(b);
 };
+
+struct Group
+{
+	std::deque<Pair> pairs;
+}
 
 class PmergeMe
 {
@@ -30,6 +38,7 @@ class PmergeMe
 		
 		std::deque<Pair> initPairs(std::deque<unsigned int>& nbs);
 		std::deque<unsigned int> init(char **args, int nb_args);
+		void sort(std::deque<Pair>& pairs);
 
 	private:
 		std::deque<Pair> m_pairs;

@@ -106,22 +106,6 @@ namespace jacobsthal
 	}
 }
 
-
-	// typedef std::deque<unsigned int>::const_iterator 	c_iter;
-	// typedef std::deque<unsigned int>::iterator 			ui_iter;
-
-	// struct group
-	// {
-	// 	ui_iter		begin;
-	// 	std::size_t	size;
-
-	// 	group() : size(0) {};
-	// };
-
-	// typedef std::deque<group> 				pair;
-	// typedef deque::pair::const_iterator 	cp_iter;
-	// typedef deque::pair::iterator 			pair_iter;
-
 	std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 	{
 		std::deque<unsigned int> nbs;
@@ -183,6 +167,25 @@ namespace jacobsthal
 		}
 
 		return m_pairs;
+	}
+	
+	std::deque<Group> nextLevelPairs(const std::deque<Pair>& pairs)
+	{
+		if (pairs.size() < 2)
+		{
+			return pairs;
+		}
+
+	}
+
+	void PmergeMe::sort(std::deque<Pair>& pairs)
+	{
+		if (pairs.size() <= 1)
+			return ;
+
+		sort(nextLevelPairs(pairs));
+		// std::deque<Pair> np = nextLevelPairs(pairs);
+		// sort(np);
 	}
 	
 	// void	swap(pair_iter it)
