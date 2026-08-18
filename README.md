@@ -23,4 +23,5 @@ merge-insert
 Ford-Johnson algorithm
 no templates (prefered)
 no duplicates (?)
+https://medium.com/@mohammad.ali.ibrahim.525/ford-johnson-algorithm-merge-insertion-4b024f0c3d42
 
