@@ -40,7 +40,7 @@ class PmergeMe
 		std::deque<Pair> initPairs(std::deque<unsigned int>& nbs);
 		std::deque<Group> initGroups(std::deque<Pair>& pairs);
 		std::deque<unsigned int> init(char **args, int nb_args);
-		void sort(std::deque<Group>& groups);
+		void sort(const std::deque<Group>& groups);
 
 	private:
 		std::deque<Pair> m_pairs;

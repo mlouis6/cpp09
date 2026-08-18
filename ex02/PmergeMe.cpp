@@ -211,14 +211,35 @@ std::deque<Group> nextLevel(const std::deque<Group>& groups)
 	{
 		return groups;
 	}
-	return groups;
+	std::deque<Group> gs;
+
+	for (std::size_t i = 0 ; i < groups.size() ; ++i)
+	{
+		Group g;
+		if (groups[i].pairs[0].a > groups[i + 1].pairs[0].a)
+		{
+			g.pairs.push_back(groups[i].pairs[0]);
+			++i;
+			g.pairs.push_back(groups[i].pairs[0]);
+		}
+		else
+		{
+			g.pairs.push_back(groups[i + 1].pairs[0]);
+			g.pairs.push_back(groups[i].pairs[0]);
+			++i;
+		}
+
+		gs.push_back(g);
+	}
+	// groups = gs;
+	return gs;
 }
 
-void PmergeMe::sort(std::deque<Group>& groups)
+void PmergeMe::sort(const std::deque<Group>& groups)
 {
 	if (groups.size() <= 1)
 		return ;
-	// sort(nextLevel(groups));
+	sort(nextLevel(groups));
 	// std::deque<Pair> np = nextLevelPairs(pairs);
 	// sort(np);
 }
