@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <sys/time.h>
 #include <cmath>
+// #include <utility>
 
 struct Pair
 {
@@ -49,7 +50,7 @@ class PmergeMe
 
 };
 
-std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs);
+// std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs);
 std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs);
 
 #endif

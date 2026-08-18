@@ -20,25 +20,27 @@ PmergeMe::~PmergeMe()
 
 }
 
+// https://medium.com/@mohammad.ali.ibrahim.525/ford-johnson-algorithm-merge-insertion-4b024f0c3d42
+
 
 // TODO:
 // sort(vector/deque<unsigned int>& numbers)
-//         |
-//         +-- pair adjacent numbers
-//         |
-//         +-- compare each pair
-//         |      A = larger
-//         |      B = smaller
-//         |
-//         +-- recursively sort A's
-//         |
-//         +-- build main chain from sorted A's
-//         |
-//         +-- insert B's using Jacobsthal order
-//         |      |
-//         |      +-- binary search
-//         |
-//         +-- insert odd remainder
+//		 |
+//		 +-- pair adjacent numbers
+//		 |
+//		 +-- compare each pair
+//		 |	  A = larger
+//		 |	  B = smaller
+//		 |
+//		 +-- recursively sort A's
+//		 |
+//		 +-- build main chain from sorted A's
+//		 |
+//		 +-- insert B's using Jacobsthal order
+//		 |	  |
+//		|	  +-- binary search
+//		 |
+//		 +-- insert odd remainder
 
 namespace jacobsthal
 {
@@ -132,6 +134,8 @@ std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 			}
 		}
 	}
+	if (nbs.empty())
+		throw std::runtime_error("Error: no arguments were passed");
 	return nbs;
 }
 
@@ -214,7 +218,7 @@ void PmergeMe::sort(std::deque<Group>& groups)
 {
 	if (groups.size() <= 1)
 		return ;
-	sort(nextLevel(groups));
+	// sort(nextLevel(groups));
 	// std::deque<Pair> np = nextLevelPairs(pairs);
 	// sort(np);
 }
@@ -270,13 +274,13 @@ void PmergeMe::sort(std::deque<Group>& groups)
 		return os;
 	}
 
-	std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs)
-	{
-		std::deque<unsigned int>::const_iterator ite = nbs.end();
-		for (std::deque<unsigned int>::const_iterator it = nbs.begin() ; it != ite ; ++it)
-			os << *it << " ";
-		return os;
-	}
+	// std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs)
+	// {
+	// 	std::deque<unsigned int>::const_iterator ite = nbs.end();
+	// 	for (std::deque<unsigned int>::const_iterator it = nbs.begin() ; it != ite ; ++it)
+	// 		os << *it << " ";
+	// 	return os;
+	// }
 
 	// deque::pair createPairs(const deque::pair& pairs)
 	// {

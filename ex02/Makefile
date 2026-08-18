@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
 
 NAME := PmergeMe
 
@@ -24,6 +24,9 @@ $(OBJS_DIR)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 -include $(DEPS)
+
+test:
+	./pmm test
 
 clean:
 	rm -rf $(OBJS_DIR)
