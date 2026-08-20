@@ -433,10 +433,11 @@ int main(int argc, char **argv)
 
 	unsigned long base = timer::start();
 	
-	std::deque<Pair> pairs = pmerge.initPairs(nbs);
-	std::cout << "Pairs:" << std::endl;
-	std::cout << pairs << std::endl;
-	// PmergeMe::deque::sort(pairs);
+	// std::deque<Pair> pairs = pmerge.initPairs(nbs);
+	// std::cout << "Pairs:" << std::endl;
+	// std::cout << pairs << std::endl;
+	pmerge.sort(nbs);
 	std::cout << timer::stop(base) << "us" << std::endl;
+	// TODO: compare result with std::sort to make sure is okay
 	return 0;
 }
