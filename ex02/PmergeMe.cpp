@@ -177,6 +177,23 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 	return pairs;
 }
 
+std::size_t	findInsertPos(
+	const std::deque<unsigned int>& main,
+	const std::deque<unsigned int>& main2,
+	const unsigned int nb,
+	const std::size_t pos)
+{
+	if (pos == i)
+		return i;
+
+	std::size_t i = pos;
+	for ( ; 0 < i - 1 ; --i)
+	{
+		if (main[i] < nb)
+			return i + 1;
+	}
+}
+
 void PmergeMe::sort(std::deque<unsigned int>& nbs)
 {
 	static int level = 0;
@@ -199,24 +216,24 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 	}
 	// if (main.size() == 1)
 	// {
-	// 	main.push_front(pending[0]);
-	// 	pending.pop_front();
+		// main.push_front(pending[0]);
+		// pending.pop_front();
 	// 	return ;
 	// }
 	if (m_hasRemainder)
 		pending.push_back(m_remainder);
 	sort(main);
 
-	std::deque<std::size_t> order = jacobsthal::getOrder(main.size());
+	std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
 	
-	// std::deque<unsigned int> main2;
-	// std::deque<unsigned int> pending2;
+	std::deque<unsigned int> main2;
+	std::deque<unsigned int> pending2;
 
-	// main2 = main;
-	// pending2 = pending;
+	main2 = main;
+	pending2 = pending;
 
-	// main2.push_front(pending2[0]);
-	// pending2.pop_front();
+	main2.push_front(pending2[0]);
+	pending2.pop_front();
 
 	std::cout << "\nlvla= " << level << std::endl;
 	--level;
