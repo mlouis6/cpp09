@@ -24,28 +24,6 @@ PmergeMe::~PmergeMe()
 
 }
 
-// https://medium.com/@mohammad.ali.ibrahim.525/ford-johnson-algorithm-merge-insertion-4b024f0c3d42
-
-
-// TODO:
-// sort(vector/deque<unsigned int>& numbers)
-//		 |
-//		 +-- pair adjacent numbers
-//		 |
-//		 +-- compare each pair
-//		 |	  A = larger
-//		 |	  B = smaller
-//		 |
-//		 +-- recursively sort A's
-//		 |
-//		 +-- build main chain from sorted A's
-//		 |
-//		 +-- insert B's using Jacobsthal order
-//		 |	  |
-//		|	  +-- binary search
-//		 |
-//		 +-- insert odd remainder
-
 namespace jacobsthal
 {
 	std::size_t getNext(std::size_t ji)
@@ -179,12 +157,12 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 
 std::size_t	findInsertPos(
 	const std::deque<unsigned int>& main,
-	const std::deque<unsigned int>& main2,
+	// const std::deque<unsigned int>& main2,
 	const unsigned int nb,
 	const std::size_t pos)
 {
-	if (pos == i)
-		return i;
+	// if (pos == i)
+	// 	return i;
 
 	std::size_t i = pos;
 	for ( ; 0 < i - 1 ; --i)
@@ -192,69 +170,160 @@ std::size_t	findInsertPos(
 		if (main[i] < nb)
 			return i + 1;
 	}
+	return pos;
 }
 
-void PmergeMe::sort(std::deque<unsigned int>& nbs)
+// void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
+// {
+// 	if (pairs.size() <= 1)
+// 		return ;
+
+// 	std::deque<unsigned int> main;
+// 	std::deque<Pair>::const_iterator ite = pairs.end();
+// 	for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
+// 	{
+// 		main.push_back(it->first);
+// 		// pending.push_back(it->second);
+// 	}
+
+// 	PmergeMe::sort(main);
+
+// 	for (std::size_t i = 0 ; i < pairs.size() - 1 ; i += 2)
+// 	{
+// 		if (pairs[i].first < pairs[i + 1].first)
+// 		{
+// 			std::swap(pairs[i], pairs[i + 1]);
+// 		}
+// 	}
+// }
+
+// void PmergeMe::sort(std::deque<unsigned int>& nbs)
+// {
+// 	static int level = 0;
+// 	++level;
+// 	std::cout << "lvlb= " << level << std::endl;
+
+// 	// if (nbs.size() <= 2)
+// 	// 	return ;
+
+// 	m_remainder = 0;
+// 	m_hasRemainder = false;
+
+// 	std::deque<Pair> pairs = initPairs(nbs);
+
+// 	if (pairs.size() <= 1)
+// 		return ;
+
+// 	sortPairs(pairs);
+
+// 	std::deque<unsigned int> main;
+// 	std::deque<unsigned int> pending;
+
+// 	std::deque<Pair>::const_iterator ite = pairs.end();
+// 	for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
+// 	{
+// 		main.push_back(it->first);
+// 		pending.push_back(it->second);
+// 	}
+// 	// if (main.size() == 1)
+// 	// {
+// 	if (!pending.empty())
+// 	{
+// 		main.push_front(pending[0]);
+// 		pending.pop_front();
+// 	}
+// 	// 	return ;
+// 	// }
+// 	if (m_hasRemainder)
+// 		pending.push_back(m_remainder);
+
+
+// 	nbs = main;
+// 	std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
+	
+// 	std::deque<unsigned int> main2;
+// 	std::deque<unsigned int> pending2;
+
+// 	main2 = main;
+// 	pending2 = pending;
+
+// 	main2.push_front(pending2[0]);
+// 	pending2.pop_front();
+
+// 	std::cout << "\nlvla= " << level << std::endl;
+// 	--level;
+
+
+// 	std::cout << "nbs: " << std::endl;
+// 	std::cout << nbs << std::endl;
+// 	std::cout << "main: " << std::endl;
+// 	std::cout << main << std::endl;
+// 	// std::cout << "main2: " << std::endl;
+// 	// std::cout << main2 << std::endl;
+// 	std::cout << "pend: " << std::endl;
+// 	std::cout << pending << std::endl;
+// 	// std::cout << "pend2: " << std::endl;
+// 	// std::cout << pending2 << std::endl;
+
+	
+	
+
+// 	// std::deque<Pair> np = nextLevelPairs(pairs);
+// 	// sort(np);
+// }
+
+
+void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
 {
-	static int level = 0;
-	++level;
-	std::cout << "lvlb= " << level << std::endl;
-
-	if (nbs.size() <= 1)
+	if (pairs.size() <= 1)
 		return ;
-
-	std::deque<Pair> pairs = initPairs(nbs);
 
 	std::deque<unsigned int> main;
 	std::deque<unsigned int> pending;
-
 	std::deque<Pair>::const_iterator ite = pairs.end();
 	for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
 	{
 		main.push_back(it->first);
 		pending.push_back(it->second);
 	}
-	// if (main.size() == 1)
-	// {
-		// main.push_front(pending[0]);
-		// pending.pop_front();
-	// 	return ;
-	// }
 	if (m_hasRemainder)
 		pending.push_back(m_remainder);
-	sort(main);
 
-	std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
-	
-	std::deque<unsigned int> main2;
-	std::deque<unsigned int> pending2;
+	for (std::size_t i = 0 ; i < pairs.size() - 1 ; i += 2)
+	{
+		if (pairs[i].first < pairs[i + 1].first)
+		{
+			std::swap(pairs[i], pairs[i + 1]);
+		}
+	}
 
-	main2 = main;
-	pending2 = pending;
+	pairs = initPairs(main);
 
-	main2.push_front(pending2[0]);
-	pending2.pop_front();
+	PmergeMe::sortPairs(pairs);
 
-	std::cout << "\nlvla= " << level << std::endl;
-	--level;
+	// use std::binary_search() // probably not
+	// or std::lower_bound() // more useful
 
 
-	std::cout << "nbs: " << std::endl;
-	std::cout << nbs << std::endl;
+	// std::cout << "nbs: " << std::endl;
+	// std::cout << nbs << std::endl;
 	std::cout << "main: " << std::endl;
 	std::cout << main << std::endl;
-	// std::cout << "main2: " << std::endl;
-	// std::cout << main2 << std::endl;
 	std::cout << "pend: " << std::endl;
 	std::cout << pending << std::endl;
-	// std::cout << "pend2: " << std::endl;
-	// std::cout << pending2 << std::endl;
+}
 
-	
-	
+void PmergeMe::sort(std::deque<unsigned int>& nbs)
+{
+	if (nbs.size() <= 1)
+		return ;
 
-	// std::deque<Pair> np = nextLevelPairs(pairs);
-	// sort(np);
+	m_remainder = 0;
+	m_hasRemainder = false;
+
+	std::deque<Pair> pairs = initPairs(nbs);
+
+	sortPairs(pairs);
 }
 
 std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs)
