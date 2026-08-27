@@ -180,17 +180,23 @@ void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
 	else
 	{
 		std::cout << "ORDER= " << order << std::endl;
-
 		std::size_t offset = order[0];
-		if (offset >= main.size())
-			offset = main.size();
-
-		std::deque<unsigned int>::const_iterator start = main.begin();
-		std::deque<unsigned int>::const_iterator end = main.begin() + offset;
-		std::deque<unsigned int>::const_iterator pos = std::lower_bound(start, end, pending[offset]);
-		main.insert(pos, pending[offset]);
-		order.pop_front();
-		pending.erase(pending.begin() + offset);
+		std::size_t prev_os = order[0] + 1;
+		while (offset > prev_os)
+		{
+			prev_os = offset;
+			if (offset >= main.size())
+				offset = main.size();
+			std::deque<unsigned int>::const_iterator start = main.begin();
+			std::deque<unsigned int>::const_iterator end = main.begin() + offset;
+			std::deque<unsigned int>::const_iterator pos = std::lower_bound(start, end, pending[offset]);
+			main.insert(pos, pending[offset]);
+			order.pop_front();
+			pending.erase(pending.begin() + offset);
+			if (order.empty())
+				break ;
+			offset = order[0];
+		}
 	}
 
 	std::cout << "main: " << std::endl;
@@ -211,7 +217,6 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 
 	sortPairs(pairs);
 }
-
 
 template <typename T>
 std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
