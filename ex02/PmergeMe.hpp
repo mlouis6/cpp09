@@ -36,7 +36,8 @@ class PmergeMe
 
 };
 
-std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs);
+template <typename T>
+std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs);
 std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs);
 
 #endif
