@@ -1,21 +1,18 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe() : m_remainder(0), m_hasRemainder(false)
+PmergeMe::PmergeMe()
 {
 
 }
 
-PmergeMe::PmergeMe(PmergeMe& other) :
-	m_remainder(other.m_remainder),
-	m_hasRemainder(other.m_hasRemainder)
+PmergeMe::PmergeMe(PmergeMe& other)
 {
-
+	static_cast<void>(other);
 }
 
 PmergeMe& PmergeMe::operator=(PmergeMe& other)
 {
-	m_remainder = other.m_remainder;
-	m_hasRemainder = other.m_hasRemainder;
+	static_cast<void>(other);
 	return *this;
 }
 
@@ -116,12 +113,6 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 	std::size_t size = nbs.size();
 	std::deque<Pair> pairs;
 
-	if (size % 2 != 0)
-	{
-		m_hasRemainder = true;
-		--size;
-		m_remainder = nbs[size];
-	}
 	for (std::size_t i = 0 ; i < size ; ++i)
 	{
 		Pair p;
@@ -144,7 +135,7 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 	return pairs;
 }
 
-void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
+void	PmergeMe::sortPairs(std::deque<Pair>& pairs, bool hasRemainder, unsigned int remainder)
 {
 	if (pairs.size() <= 1)
 		return ;
@@ -157,8 +148,14 @@ void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
 		a_deq.push_back(it->first);
 	}
 	pairs = initPairs(a_deq);
-
-	PmergeMe::sortPairs(pairs);
+	hasRemainder = false;
+	remainder = 0;
+	if (a_deq.size() % 2 != 0)
+	{
+		hasRemainder = true;
+		remainder = a_deq[a_deq.size() - 1];
+	}
+	PmergeMe::sortPairs(pairs, hasRemainder, remainder);
 
 
 	std::deque<unsigned int> main;
@@ -169,8 +166,8 @@ void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
 		main.push_back(it->first);
 		pending.push_back(it->second);
 	}
-	if (m_hasRemainder)
-		pending.push_back(m_remainder);
+	if (hasRemainder)
+		pending.push_back(remainder);
 
 	if (main.size() == 1)
 	{
@@ -210,12 +207,17 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 	if (nbs.size() <= 1)
 		return ;
 
-	m_remainder = 0;
-	m_hasRemainder = false;
-
 	std::deque<Pair> pairs = initPairs(nbs);
 
-	sortPairs(pairs);
+	bool hasRemainder = false;
+	unsigned int remainder = 0;
+	if (nbs.size() % 2 != 0)
+	{
+		hasRemainder = true;
+		remainder = nbs[nbs.size() - 1];
+	}
+
+	sortPairs(pairs, hasRemainder, remainder);
 }
 
 template <typename T>

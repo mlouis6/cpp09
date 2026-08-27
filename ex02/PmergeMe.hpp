@@ -28,11 +28,9 @@ class PmergeMe
 		std::deque<Pair> initPairs(std::deque<unsigned int>& nbs);
 		std::deque<unsigned int> init(char **args, int nb_args);
 		void sort(std::deque<unsigned int>& nbs);
-		void	sortPairs(std::deque<Pair>& pairs);
 
 	private:
-		unsigned int	m_remainder;
-		bool			m_hasRemainder;
+		void	sortPairs(std::deque<Pair>& pairs, bool hasRemainder, unsigned int remainder);
 
 };
 
