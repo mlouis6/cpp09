@@ -113,7 +113,7 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 	std::size_t size = nbs.size();
 	std::deque<Pair> pairs;
 
-	for (std::size_t i = 0 ; i < size ; ++i)
+	for (std::size_t i = 0 ; i + 1 < size ; ++i)
 	{
 		Pair p;
 		if (nbs[i] > nbs[i + 1])
@@ -128,78 +128,106 @@ std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
 			++i;
 			p.first = nbs[i];
 		}
-
+		p.index = pairs.size();
 		pairs.push_back(p);
 	}
 
 	return pairs;
 }
 
-void	PmergeMe::sortPairs(std::deque<Pair>& pairs, bool hasRemainder, unsigned int remainder)
+
+std::deque<Pair> makeLargerPairs(std::deque<Pair>& pairs)
+{
+	std::deque<Pair> largerPairs;
+
+	for (std::size_t i = 0 ; i + 1 < pairs.size() ; ++i)
+	{
+		Pair p;
+		if (pairs[i].first > pairs[i + 1].first)
+		{
+			p.first = pairs[i].first;
+			++i;
+			p.second = pairs[i].first;
+		}
+		else
+		{
+			p.second = pairs[i].first;
+			++i;
+			p.first = pairs[i].first;
+		}
+		
+		largerPairs.push_back(p);
+	}
+
+	return largerPairs;
+}
+
+void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
 {
 	if (pairs.size() <= 1)
 		return ;
 
-	static std::deque<std::size_t> order = jacobsthal::getOrder(pairs.size());
-	std::deque<unsigned int> a_deq;
-	std::deque<Pair>::const_iterator ite = pairs.end();
-	for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
-	{
-		a_deq.push_back(it->first);
-	}
-	pairs = initPairs(a_deq);
-	hasRemainder = false;
-	remainder = 0;
-	if (a_deq.size() % 2 != 0)
-	{
-		hasRemainder = true;
-		remainder = a_deq[a_deq.size() - 1];
-	}
-	PmergeMe::sortPairs(pairs, hasRemainder, remainder);
+	// static std::deque<std::size_t> order = jacobsthal::getOrder(pairs.size());
+	// std::deque<unsigned int> a_deq;
+	// std::deque<Pair>::const_iterator ite = pairs.end();
+	// for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
+	// {
+	// 	a_deq.push_back(it->first);
+	// }
+	// pairs = initPairs(a_deq);
+	// hasRemainder = false;
+	// remainder = 0;
+	// if (a_deq.size() % 2 != 0)
+	// {
+	// 	hasRemainder = true;
+	// 	remainder = a_deq[a_deq.size() - 1];
+	// }
+	std::deque<Pair> largerPairs = makeLargerPairs(pairs);
+	PmergeMe::sortPairs(largerPairs);
 
 
-	std::deque<unsigned int> main;
-	std::deque<unsigned int> pending;
-	ite = pairs.end();
-	for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
-	{
-		main.push_back(it->first);
-		pending.push_back(it->second);
-	}
-	if (hasRemainder)
-		pending.push_back(remainder);
+	// std::deque<unsigned int> main;
+	// std::deque<unsigned int> pending;
+	// ite = pairs.end();
+	// for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
+	// {
+	// 	main.push_back(it->first);
+	// 	pending.push_back(it->second);
+	// }
+	// if (hasRemainder)
+	// 	pending.push_back(remainder);
 
-	if (main.size() == 1)
-	{
-		main.push_front(pending[0]);
-		pending.pop_front();
-	}
-	else
-	{
-		std::cout << "ORDER= " << order << std::endl;
-		std::size_t offset = order[0];
-		std::size_t prev_os = order[0] + 1;
-		while (offset > prev_os)
-		{
-			prev_os = offset;
-			if (offset >= main.size())
-				offset = main.size();
-			std::deque<unsigned int>::const_iterator start = main.begin();
-			std::deque<unsigned int>::const_iterator end = main.begin() + offset;
-			std::deque<unsigned int>::const_iterator pos = std::lower_bound(start, end, pending[offset]);
-			main.insert(pos, pending[offset]);
-			order.pop_front();
-			pending.erase(pending.begin() + offset);
-			if (order.empty())
-				break ;
-			offset = order[0];
-		}
-	}
+	// if (main.size() == 1)
+	// {
+	// 	main.push_front(pending[0]);
+	// 	pending.pop_front();
+	// }
+	// else
+	// {
+	// 	std::cout << "ORDER= " << order << std::endl;
+	// 	std::size_t offset = order[0];
+	// 	std::size_t prev_os = order[0] + 1;
+	// 	while (offset > prev_os)
+	// 	{
+	// 		prev_os = offset;
+	// 		if (offset >= main.size())
+	// 			offset = main.size();
+	// 		std::deque<unsigned int>::const_iterator start = main.begin();
+	// 		std::deque<unsigned int>::const_iterator end = main.begin() + offset;
+	// 		std::deque<unsigned int>::const_iterator pos = std::lower_bound(start, end, pending[offset]);
+	// 		main.insert(pos, pending[offset]);
+	// 		order.pop_front();
+	// 		pending.erase(pending.begin() + offset);
+	// 		if (order.empty())
+	// 			break ;
+	// 		offset = order[0];
+	// 	}
+	// }
 
-	std::cout << "main: " << std::endl;
-	std::cout << main << std::endl;
-	std::cout << "pend: " << std::endl;
-	std::cout << pending << std::endl;
+	// std::cout << "main: " << std::endl;
+	// std::cout << main << std::endl;
+	// std::cout << "pend: " << std::endl;
+	// std::cout << pending << std::endl;
 }
 
 void PmergeMe::sort(std::deque<unsigned int>& nbs)
@@ -209,15 +237,15 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 
 	std::deque<Pair> pairs = initPairs(nbs);
 
-	bool hasRemainder = false;
-	unsigned int remainder = 0;
-	if (nbs.size() % 2 != 0)
-	{
-		hasRemainder = true;
-		remainder = nbs[nbs.size() - 1];
-	}
+	// bool hasRemainder = false;
+	// unsigned int remainder = 0;
+	// if (nbs.size() % 2 != 0)
+	// {
+	// 	hasRemainder = true;
+	// 	remainder = nbs[nbs.size() - 1];
+	// }
 
-	sortPairs(pairs, hasRemainder, remainder);
+	sortPairs(pairs);
 }
 
 template <typename T>

@@ -14,7 +14,12 @@
 #include <cmath>
 #include <utility>
 
-typedef std::pair<unsigned int, unsigned int> Pair; 
+struct Pair
+{
+	unsigned int first;
+	unsigned int second;
+	std::size_t index;
+};
 
 class PmergeMe
 {
@@ -30,7 +35,7 @@ class PmergeMe
 		void sort(std::deque<unsigned int>& nbs);
 
 	private:
-		void	sortPairs(std::deque<Pair>& pairs, bool hasRemainder, unsigned int remainder);
+		void	sortPairs(std::deque<Pair>& pairs);
 
 };
 
