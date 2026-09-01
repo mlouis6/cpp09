@@ -43,25 +43,25 @@ namespace jacobsthal
 
 namespace deque
 {
-	typedef std::deque<unsigned int> 		u_int;
-	typedef deque::u_int::const_iterator 	c_iter;
-	typedef deque::u_int::iterator 			ui_iter;
+	// typedef std::deque<unsigned int> 					u_int;
+	// typedef std::deque<unsigned int>::const_iterator 	c_iter;
+	// typedef std::deque<unsigned int>::iterator 			ui_iter;
 
 	struct group
 	{
-		ui_iter		begin;
+		std::deque<unsigned int>::iterator		begin;
 		std::size_t	size;
 
 		group() : size(0) {};
 	};
 
-	typedef std::deque<group> 				pair;
-	typedef deque::pair::const_iterator 	cp_iter;
-	typedef deque::pair::iterator 			pair_iter;
+	// typedef std::deque<group> 					pair;
+	// typedef std::deque<group>::const_iterator 	cp_iter;
+	// typedef std::deque<group>::iterator 		pair_iter;
 
-	deque::u_int init(char **args, int nb_args)
+	std::deque<unsigned int> init(char **args, int nb_args)
 	{
-		deque::u_int nbs;
+		std::deque<unsigned int> nbs;
 
 		for (int i = 1 ; i < nb_args ; ++i)
 		{
@@ -91,12 +91,12 @@ namespace deque
 		return nbs;
 	}
 
-	deque::pair initPairs(deque::u_int& nbs)
+	std::deque<group> initPairs(std::deque<unsigned int>& nbs)
 	{
-		deque::pair pairs;
-		ui_iter ite = nbs.end();
+		std::deque<group> pairs;
+		std::deque<unsigned int>::iterator ite = nbs.end();
 
-		for (ui_iter it = nbs.begin() ; it != ite ; )
+		for (std::deque<unsigned int>::iterator it = nbs.begin() ; it != ite ; )
 		{
 			group g;
 			g.begin = it;
@@ -115,7 +115,7 @@ namespace deque
 		return pairs;
 	}
 	
-	void	swap(pair_iter it)
+	void	swap(std::deque<group>::iterator it)
 	{
 		for (std::size_t i = 0 ; i < it->size / 2 ; ++i)
 		{
@@ -124,27 +124,27 @@ namespace deque
 
 	}
 
-	void findBiggest(deque::pair& pairs)
+	void findBiggest(std::deque<group>& pairs)
 	{
-		pair_iter ite = pairs.end();
-		pair_iter it = pairs.begin();
+		std::deque<group>::iterator ite = pairs.end();
+		std::deque<group>::iterator it = pairs.begin();
 		if (it->size != (ite - 1)->size)
 		{
 			--ite;
 		}
 		for ( ; it != ite ; ++it)
 		{
-			if (*(it->begin) < *(it->begin + (it->size / 2))) // TODO: maybe invert > to <
+			if (*(it->begin) < *(it->begin + (it->size / 2)))
 			{
 				swap(it);
 			}
 		}
 	}
 
-	std::size_t	getPairsSize(const deque::pair& pairs)
+	std::size_t	getPairsSize(const std::deque<group>& pairs)
 	{
-		cp_iter ite = pairs.end();
-		cp_iter it = pairs.begin();
+		std::deque<group>::const_iterator ite = pairs.end();
+		std::deque<group>::const_iterator it = pairs.begin();
 		if (it == ite - 1)
 		{
 			return 1;
@@ -157,13 +157,13 @@ namespace deque
 	}
 
 
-	std::ostream&	operator<<(std::ostream& os, const deque::pair& pairs)
+	std::ostream&	operator<<(std::ostream& os, const std::deque<group>& pairs)
 	{
-		cp_iter ite = pairs.end();
-		cp_iter it = pairs.begin();
+		std::deque<group>::const_iterator ite = pairs.end();
+		std::deque<group>::const_iterator it = pairs.begin();
 		for (; it != ite; ++it)
 		{
-			c_iter	iter = it->begin;
+			std::deque<unsigned int>::const_iterator	iter = it->begin;
 			os << "[";
 			for (std::size_t i = 0 ; i < it->size - 1 ; ++i, ++iter)
 			{
@@ -176,17 +176,17 @@ namespace deque
 		return os;
 	}
 
-	std::ostream&	operator<<(std::ostream& os, const deque::u_int& nbs)
+	std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs)
 	{
-		c_iter ite = nbs.end();
-		for (c_iter it = nbs.begin() ; it != ite ; ++it)
+		std::deque<unsigned int>::const_iterator ite = nbs.end();
+		for (std::deque<unsigned int>::const_iterator it = nbs.begin() ; it != ite ; ++it)
 			os << *it << " ";
 		return os;
 	}
 
-	deque::pair createPairs(const deque::pair& pairs)
+	std::deque<group> createPairs(const std::deque<group>& pairs)
 	{
-		deque::pair newPairs;
+		std::deque<group> newPairs;
 		std::size_t i = 0;
 		for ( ; i + 1 < pairs.size() ; i += 2)
 		{
@@ -204,31 +204,6 @@ namespace deque
 		return newPairs;
 	}
 
-	void orderPairs(deque::pair& pairs, const deque::pair& newPairs)
-	{
-		deque::pair ordered;
-
-		for (cp_iter it = newPairs.begin() ; it != newPairs.end() ; ++it)
-		{
-			for (cp_iter it2 = pairs.begin() ; it2 != pairs.end() ; ++it2)
-			{
-				if (it2->begin == it->begin)
-				{
-					ordered.push_back(*it2);
-					if (it->size == it2->size * 2)
-					{
-						++it2;
-						if (it2 != pairs.end())
-							ordered.push_back(*it2);
-					}
-					break ;
-				}
-			}
-		}
-
-		pairs = ordered;
-	}
-
 	void	insertPending(std::deque<std::size_t>& order, std::deque<unsigned int>& main, std::deque<unsigned int>& pending)
 	{
 		for (std::deque<std::size_t>::const_iterator it = order.begin() ; it != order.end() ; ++it)
@@ -240,7 +215,7 @@ namespace deque
 		}	
 	}
 
-	void	sort(deque::pair& pairs)
+	void	sort(std::deque<group>& pairs)
 	{
 		std::cout << "CREATE\n"<< pairs << std::endl;
 		findBiggest(pairs);
@@ -259,11 +234,11 @@ namespace deque
 			return ;
 
 
-		deque::pair newPairs = createPairs(pairs);
+		std::deque<group> newPairs = createPairs(pairs);
 		sort(newPairs);
-		orderPairs(pairs, newPairs);
 
-		// pairs = createPairs(nbs, nbGroups);
+		// TODO: jaco
+		// TODO: insert
 
 		/** order order winner winner */
 
@@ -274,7 +249,7 @@ namespace deque
 
 	void	sort(std::deque<unsigned int>& nbs)
 	{
-		deque::pair pairs = deque::initPairs(nbs);
+		std::deque<group> pairs = deque::initPairs(nbs);
 		sort(pairs);
 
 		std::deque<unsigned int> main;
@@ -289,12 +264,10 @@ namespace deque
 
 		if (!pairs.empty())
 		{
-			pair_iter it = pairs.end() - 1;
+			std::deque<group>::iterator it = pairs.end() - 1;
 			pending.push_back(*it->begin);
 		}
 
-		// TODO: jaco
-		// TODO: order
 
 	}
 
@@ -333,8 +306,8 @@ namespace timer
  */
 int main(int argc, char **argv)
 {
-	deque::u_int	nbs;
-	if (argc < 2)
+	std::deque<unsigned int>	nbs;
+	if (argc < 2 || (argc == 2 && argv[1][0] == 0))
 	{
 		std::cerr << "Error: usage `./PmergeMe <positive integers>`" << std::endl;
 		return 1;
@@ -351,7 +324,7 @@ int main(int argc, char **argv)
 
 	unsigned long base = timer::start();
 	
-	// deque::pair pairs = deque::initPairs(nbs);
+	// std::deque<group> pairs = deque::initPairs(nbs);
 	deque::sort(nbs);
 	std::cout << timer::stop(base) << "us" << std::endl;
 	return 0;
