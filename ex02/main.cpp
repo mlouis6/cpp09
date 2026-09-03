@@ -43,9 +43,6 @@ namespace jacobsthal
 
 namespace deque
 {
-	// typedef std::deque<unsigned int> 					u_int;
-	// typedef std::deque<unsigned int>::const_iterator 	c_iter;
-	// typedef std::deque<unsigned int>::iterator 			ui_iter;
 
 	struct group
 	{
@@ -55,9 +52,13 @@ namespace deque
 		group() : size(0) {};
 	};
 
-	// typedef std::deque<group> 					pair;
-	// typedef std::deque<group>::const_iterator 	cp_iter;
-	// typedef std::deque<group>::iterator 		pair_iter;
+	struct Pending
+	{
+		unsigned int value;
+		std::size_t	index;
+
+		Pending() : value(0), index(0) {};
+	};
 
 	std::deque<unsigned int> init(char **args, int nb_args)
 	{
@@ -184,6 +185,14 @@ namespace deque
 		return os;
 	}
 
+	std::ostream&	operator<<(std::ostream& os, const std::deque<Pending>& pending)
+	{
+		std::deque<Pending>::const_iterator ite = pending.end();
+		for (std::deque<Pending>::const_iterator it = pending.begin() ; it != ite ; ++it)
+			os << it->value << "(" << it->index << ") ";
+		return os;
+	}
+
 	std::deque<group> createPairs(const std::deque<group>& pairs)
 	{
 		std::deque<group> newPairs;
@@ -202,6 +211,28 @@ namespace deque
 			newPairs.push_back(pairs[i]);
 
 		return newPairs;
+	}
+
+	void	initMainPending(
+		const std::deque<group>& pairs,
+		std::deque<unsigned int>& main,
+		std::deque<Pending>& pending
+	)
+	{
+		if (pairs.size() > 1)
+		{
+			main.push_front(*(pairs[0].begin + 1));
+			main.push_back(*(pairs[0].begin));
+		}
+		std::size_t i = 1;
+		for ( ; i < getPairsSize(pairs) ; ++i)
+		{
+			main.push_back(*(pairs[i].begin));
+			Pending p;
+			p.value = *(pairs[i].begin + 1);
+			p.index = i;
+			pending.push_back(p);
+		}
 	}
 
 	void	insertPending(std::deque<std::size_t>& order, std::deque<unsigned int>& main, std::deque<unsigned int>& pending)
@@ -233,18 +264,32 @@ namespace deque
 		if (deque::getPairsSize(pairs) <= 1)
 			return ;
 
+		// std::deque<group> newPairs = createPairs(pairs);
+		// sort(newPairs);
+		pairs = createPairs(pairs);
+		sort(pairs);
+		std::cout << "\nEND RECURSION" << std::endl;
+		std::cout << "pairs: " << std::endl;
+		std::cout << pairs << std::endl;
+		// std::cout << "newPairs: " << std::endl;
+		// std::cout << newPairs << std::endl;
 
-		std::deque<group> newPairs = createPairs(pairs);
-		sort(newPairs);
+		std::deque<unsigned int> main;
+		std::deque<Pending> pending;
+	
+		initMainPending(pairs, main, pending);
+
+		std::cout << "main: " << std::endl;
+		std::cout << main << std::endl;
+		std::cout << "pending: " << std::endl;
+		std::cout << pending << std::endl;
 
 		// TODO: jaco
+		std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
 		// TODO: insert
 
 		/** order order winner winner */
 
-		std::cout << "END RECURSION" << std::endl;
-
-		std::cout << pairs << std::endl;
 	}
 
 	void	sort(std::deque<unsigned int>& nbs)

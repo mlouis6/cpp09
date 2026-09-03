@@ -52,10 +52,10 @@ bool	BitcoinExchange::checkDate(const std::string& date)
 
 std::string	BitcoinExchange::trim(const std::string& str)
 {
-	size_t begin = str.find_first_not_of(" \t\n\v\f\r");
+	std::size_t begin = str.find_first_not_of(" \t\n\v\f\r");
 	if (begin == std::string::npos)
 		return "";
-	size_t end = str.find_last_not_of(" \t\n\v\f\r");
+	std::size_t end = str.find_last_not_of(" \t\n\v\f\r");
 	
 	return str.substr(begin, end - begin + 1);
 }
@@ -63,7 +63,7 @@ std::string	BitcoinExchange::trim(const std::string& str)
 // TODO: check missing delimiter
 bool	BitcoinExchange::checkFirstLine(const std::string& line, const std::string& col1, const std::string& col2, const char del)
 {
-	size_t	pos = line.find(del);
+	std::size_t	pos = line.find(del);
 
 	std::string sub = line.substr(0, pos );
 	sub = trim(sub);
@@ -86,7 +86,7 @@ bool	BitcoinExchange::checkFirstLine(const std::string& line, const std::string&
 // TODO: check missing delimiter
 bool	BitcoinExchange::checkLine(const std::string& line, const char del, const double max, pair& data)
 {
-	size_t	pos = line.find(del);
+	std::size_t	pos = line.find(del);
 
 	std::string sub = line.substr(0, pos);
 	sub = trim(sub);
