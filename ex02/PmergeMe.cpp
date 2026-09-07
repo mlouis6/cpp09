@@ -107,6 +107,7 @@ std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 	return nbs;
 }
 
+
 std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 {
 	if (pairs.size() <= 1)
@@ -153,7 +154,6 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 	std::cout << "size" << std::endl;
 	std::cout << newPairs.size() << std::endl;
 
-
 	std::deque<unsigned int> res;
 	std::deque<unsigned int> main;
 	std::deque<unsigned int> pending;
@@ -168,7 +168,7 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 		pending.push_back(remainder); 
 	}
 	
-	res.push_front(newPairs[0].loser);
+	res.insert(res.begin(), newPairs[0].loser);
 
 	std::deque<size_t> order = jacobsthal::getOrder(newPairs.size());
 	
@@ -180,17 +180,17 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 
 	while (!order.empty())
 	{
-		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.begin() + order[0], pending[order[0]]);
+		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.begin() + order[0], pending[order[0] - 1]);
 		res.insert(pos, pending[order[0]]);
 
 		order.pop_front();
 	}
 
-	if (hasRemainder)
-	{
-		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.end(), remainder);
-		res.insert(pos, remainder);
-	}
+	// if (hasRemainder)
+	// {
+	// 	std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.end(), remainder);
+	// 	res.insert(pos, remainder);
+	// }
 
 	std::cout << "main" << std::endl;
 	std::cout << main << std::endl;
