@@ -36,6 +36,7 @@ class PmergeMe
 
 	private:
 		void	sortPairs(std::deque<Pair>& pairs);
+		std::deque<Pair> sortFJ(std::deque<Pair> pairs);
 
 };
 

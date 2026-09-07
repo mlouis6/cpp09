@@ -466,7 +466,13 @@ std::deque<Pair> PmergeMe::sortFJ(std::deque<Pair> pairs)
 
 	std::deque<Pair> tmp;
 	for (std::size_t i = 0 ; i < newMain.size() ; ++i)
-		tmp.push_back(std::make_pair(newMain[i], 0));
+	{
+		Pair p;
+		p.first = newMain[i];
+		p.second = 0;
+		tmp.push_back(p);
+	}
+		// tmp.push_back(std::make_pair(newMain[i], 0));
 
 	return tmp;
 }
@@ -479,7 +485,13 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 
 	std::deque<Pair> pairs;
 	for (std::size_t i = 0 ; i < nbs.size() ; ++i)
-		pairs.push_back(std::make_pair(nbs[i], 0));
+	{
+		Pair p;
+		p.first = nbs[i];
+		p.second = 0;
+		pairs.push_back(p);
+	}
+		// pairs.push_back(std::make_pair(nbs[i], 0));
 
 	std::deque<Pair> sorted = sortFJ(pairs);
 
@@ -506,14 +518,14 @@ std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
 	return os;
 }
 
-std::ostream&	operator<<(std::ostream& os, const std::deque<Pending>& pending)
-{
-	for (std::size_t i = 0 ; i < pending.size(); ++i)
-	{
-		os << pending[i].value << "(" << pending[i].index << ") ";
-	}
-	return os;
-}
+// std::ostream&	operator<<(std::ostream& os, const std::deque<Pending>& pending)
+// {
+// 	for (std::size_t i = 0 ; i < pending.size(); ++i)
+// 	{
+// 		os << pending[i].value << "(" << pending[i].index << ") ";
+// 	}
+// 	return os;
+// }
 
 std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs)
 {
