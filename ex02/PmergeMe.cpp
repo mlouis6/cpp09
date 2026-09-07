@@ -1,275 +1,3 @@
-// #include "PmergeMe.hpp"
-
-// PmergeMe::PmergeMe()
-// {
-
-// }
-
-// PmergeMe::PmergeMe(PmergeMe& other)
-// {
-// 	static_cast<void>(other);
-// }
-
-// PmergeMe& PmergeMe::operator=(PmergeMe& other)
-// {
-// 	static_cast<void>(other);
-// 	return *this;
-// }
-
-// PmergeMe::~PmergeMe()
-// {
-
-// }
-
-// namespace jacobsthal
-// {
-// 	std::size_t getNext(std::size_t ji)
-// 	{
-// 		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
-// 	}
-
-// 	std::size_t getNumber(std::size_t size)
-// 	{
-// 		if (size == 0)
-// 			return 0;
-// 		if (size == 1)
-// 			return 1;
-// 		std::size_t ji = 1;
-// 		std::size_t jn = getNext(ji);
-// 		std::size_t save = 1;
-// 		while (jn < size)
-// 		{
-// 			save = jn;
-// 			++ji;
-// 			jn = getNext(ji);
-// 		}
-// 		return save;
-// 	}
-
-// 	// template <typename std::deque<std::size_t>>
-// 	std::deque<std::size_t> getOrder(std::size_t size)
-// 	{
-// 		std::deque<std::size_t> j_order;
-// 		std::size_t prev_Jaco = 1;
-
-// 		if (size > 1)
-// 			j_order.push_back(1);
-
-// 		for (std::size_t i = 3 ;  ; ++i)
-// 		{	
-// 			std::size_t nbJaco = getNumber(i);
-
-// 			if (prev_Jaco >= size - 1)
-// 				break ;
-
-// 			std::size_t end = std::min(nbJaco, size - 1);
-
-// 			for (std::size_t j = end ; j > prev_Jaco ; --j)
-// 			{
-// 					j_order.push_back(j);
-// 			}
-// 			prev_Jaco = end;
-// 		}
-// 		return j_order;
-// 	}
-// }
-
-// std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
-// {
-// 	std::deque<unsigned int> nbs;
-
-// 	for (int i = 1 ; i < nb_args ; ++i)
-// 	{
-// 		std::istringstream iss(args[i]);
-// 		if (args[i][0] == 0)
-// 			continue ;
-// 		while (!iss.eof())
-// 		{
-// 			unsigned long val;
-// 			iss >> val;
-// 			if (iss.fail() || val > std::numeric_limits<unsigned int>::max())
-// 			{
-// 				throw std::runtime_error("Error: argument must be a positive integer (not `" + iss.str() + "`)");
-// 			}
-// 			if (nbs.empty())
-// 				nbs.push_back(static_cast<unsigned int>(val));
-// 			else if (std::find(nbs.begin(), nbs.end(), static_cast<unsigned int>(val)) == nbs.end())
-// 			{
-// 				nbs.push_back(static_cast<unsigned int>(val));
-// 			}
-// 			else
-// 			{
-// 				std::cout << "Warning: duplicate (" << static_cast<unsigned int>(val) << "), only one occurence added to the list to be sorted" << std::endl;
-// 			}
-// 		}
-// 	}
-// 	if (nbs.empty())
-// 		throw std::runtime_error("Error: no arguments were passed");
-// 	return nbs;
-// }
-
-// std::deque<Pair> PmergeMe::initPairs(std::deque<unsigned int>& nbs)
-// {
-// 	std::size_t size = nbs.size();
-// 	std::deque<Pair> pairs;
-
-// 	for (std::size_t i = 0 ; i + 1 < size ; ++i)
-// 	{
-// 		Pair p;
-// 		if (nbs[i] > nbs[i + 1])
-// 		{
-// 			p.first = nbs[i];
-// 			++i;
-// 			p.second = nbs[i];
-// 		}
-// 		else
-// 		{
-// 			p.second = nbs[i];
-// 			++i;
-// 			p.first = nbs[i];
-// 		}
-// 		p.index = pairs.size();
-// 		pairs.push_back(p);
-// 	}
-
-// 	return pairs;
-// }
-
-
-// std::deque<Pair> makeLargerPairs(std::deque<Pair>& pairs)
-// {
-// 	std::deque<Pair> largerPairs;
-
-// 	for (std::size_t i = 0 ; i + 1 < pairs.size() ; ++i)
-// 	{
-// 		Pair p;
-// 		if (pairs[i].first > pairs[i + 1].first)
-// 		{
-// 			p.first = pairs[i].first;
-// 			++i;
-// 			p.second = pairs[i].first;
-// 		}
-// 		else
-// 		{
-// 			p.second = pairs[i].first;
-// 			++i;
-// 			p.first = pairs[i].first;
-// 		}
-		
-// 		largerPairs.push_back(p);
-// 	}
-
-// 	return largerPairs;
-// }
-
-// void	PmergeMe::sortPairs(std::deque<Pair>& pairs)
-// {
-// 	if (pairs.size() <= 1)
-// 		return ;
-
-// 	// static std::deque<std::size_t> order = jacobsthal::getOrder(pairs.size());
-// 	// std::deque<unsigned int> a_deq;
-// 	// std::deque<Pair>::const_iterator ite = pairs.end();
-// 	// for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
-// 	// {
-// 	// 	a_deq.push_back(it->first);
-// 	// }
-// 	// pairs = initPairs(a_deq);
-// 	// hasRemainder = false;
-// 	// remainder = 0;
-// 	// if (a_deq.size() % 2 != 0)
-// 	// {
-// 	// 	hasRemainder = true;
-// 	// 	remainder = a_deq[a_deq.size() - 1];
-// 	// }
-// 	std::deque<Pair> largerPairs = makeLargerPairs(pairs);
-// 	PmergeMe::sortPairs(largerPairs);
-
-
-// 	// std::deque<unsigned int> main;
-// 	// std::deque<unsigned int> pending;
-// 	// ite = pairs.end();
-// 	// for (std::deque<Pair>::const_iterator it = pairs.begin() ; it != ite ; ++it)
-// 	// {
-// 	// 	main.push_back(it->first);
-// 	// 	pending.push_back(it->second);
-// 	// }
-// 	// if (hasRemainder)
-// 	// 	pending.push_back(remainder);
-
-// 	// if (main.size() == 1)
-// 	// {
-// 	// 	main.push_front(pending[0]);
-// 	// 	pending.pop_front();
-// 	// }
-// 	// else
-// 	// {
-// 	// 	std::cout << "ORDER= " << order << std::endl;
-// 	// 	std::size_t offset = order[0];
-// 	// 	std::size_t prev_os = order[0] + 1;
-// 	// 	while (offset > prev_os)
-// 	// 	{
-// 	// 		prev_os = offset;
-// 	// 		if (offset >= main.size())
-// 	// 			offset = main.size();
-// 	// 		std::deque<unsigned int>::const_iterator start = main.begin();
-// 	// 		std::deque<unsigned int>::const_iterator end = main.begin() + offset;
-// 	// 		std::deque<unsigned int>::const_iterator pos = std::lower_bound(start, end, pending[offset]);
-// 	// 		main.insert(pos, pending[offset]);
-// 	// 		order.pop_front();
-// 	// 		pending.erase(pending.begin() + offset);
-// 	// 		if (order.empty())
-// 	// 			break ;
-// 	// 		offset = order[0];
-// 	// 	}
-// 	// }
-
-// 	// std::cout << "main: " << std::endl;
-// 	// std::cout << main << std::endl;
-// 	// std::cout << "pend: " << std::endl;
-// 	// std::cout << pending << std::endl;
-// }
-
-// void PmergeMe::sort(std::deque<unsigned int>& nbs)
-// {
-// 	if (nbs.size() <= 1)
-// 		return ;
-
-// 	std::deque<Pair> pairs = initPairs(nbs);
-
-// 	// bool hasRemainder = false;
-// 	// unsigned int remainder = 0;
-// 	// if (nbs.size() % 2 != 0)
-// 	// {
-// 	// 	hasRemainder = true;
-// 	// 	remainder = nbs[nbs.size() - 1];
-// 	// }
-
-// 	sortPairs(pairs);
-// }
-
-// template <typename T>
-// std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
-// {
-// 	for (std::size_t i = 0 ; i < nbs.size() - 1; ++i)
-// 	{
-// 		os << nbs[i] << ", ";
-// 	}
-// 	os << nbs[nbs.size() - 1];
-
-// 	return os;
-// }
-
-// std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs)
-// {
-// 	for (std::size_t i = 0 ; i < pairs.size(); ++i)
-// 	{
-// 		os << "[" << pairs[i].first << ", " << pairs[i].second << "]" << std::endl;
-// 	}
-// 	return os;
-// }
-
-
 #include "PmergeMe.hpp"
 
 PmergeMe::PmergeMe()
@@ -295,10 +23,10 @@ PmergeMe::~PmergeMe()
 
 namespace jacobsthal
 {
-	std::size_t getNext(std::size_t ji)
-	{
-		return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
-	}
+	// std::size_t getNext(std::size_t ji)
+	// {
+	// 	return (std::pow(2, ji) - std::pow(-1, ji)) / 3;
+	// }
 
 	std::size_t getNumber(std::size_t size)
 	{
@@ -306,14 +34,13 @@ namespace jacobsthal
 			return 0;
 		if (size == 1)
 			return 1;
-		std::size_t ji = 1;
-		std::size_t jn = getNext(ji);
+		std::size_t ji = 0;
 		std::size_t save = 1;
-		while (jn < size)
+		for (std::size_t i = 2 ; i <= size ; ++i)
 		{
+			std::size_t jn = save + 2 * ji;
+			ji = save;
 			save = jn;
-			++ji;
-			jn = getNext(ji);
 		}
 		return save;
 	}
@@ -380,101 +107,99 @@ std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 	return nbs;
 }
 
-std::deque<Pair> PmergeMe::sortFJ(std::deque<Pair> pairs)
+std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 {
 	if (pairs.size() <= 1)
-		return pairs;
-
-	bool hasRemainder = false; 
-	unsigned int remainder = 0;
-	if (pairs.size() % 2 != 0)
 	{
-		hasRemainder = true;
-		remainder = pairs[pairs.size() - 1].first;
-		pairs.pop_back();
+		std::deque<unsigned int> ret;
+		for (std::size_t i = 0 ; i < pairs.size() ; ++i)
+			ret.push_back(pairs[i].winner);
+		return ret;
 	}
 
 	std::deque<Pair> newPairs;
-	for (std::size_t i = 0 ; i < pairs.size() ; i += 2)
+	std::size_t size = pairs.size();
+	bool hasRemainder = false;
+	unsigned int remainder;
+	if (size % 2 != 0)
+	{
+		--size;
+		hasRemainder = true;
+		remainder = pairs[size].winner;
+	}
+
+	for (std::size_t i = 0 ; i < size ; i += 2)
 	{
 		Pair p;
-		if (pairs[i].first < pairs[i + 1].first)
+		if (pairs[i].winner > pairs[i + 1].winner)
 		{
-			p.first = pairs[i + 1].first;
-			p.second = pairs[i].first;
+			p.winner = pairs[i].winner;
+			p.loser = pairs[i + 1].winner;
 		}
 		else
 		{
-			p.first = pairs[i].first;
-			p.second = pairs[i + 1].first;
+			p.winner = pairs[i + 1].winner;
+			p.loser = pairs[i].winner;
 		}
 		newPairs.push_back(p);
 	}
 
-	std::deque<Pair> main = sortFJ(newPairs);
+	std::deque<unsigned int> pairs2 = sortFJ(newPairs);
 
-	std::deque<unsigned int> pending;
-	std::deque<unsigned int> newMain;
-	for (std::size_t i = 0 ; i < main.size() ; ++i)
-	{
-		newMain.push_back(main[i].first);
-		pending.push_back(main[i].second);
-	}
-
-	// std::cout << "nbs" << std::endl;
-	// std::cout << nbs << std::endl;
+	std::cout << "pairs" << std::endl;
+	std::cout << pairs << std::endl;
 	std::cout << "newPairs" << std::endl;
 	std::cout << newPairs << std::endl;
-	// std::cout << "losers" << std::endl;
-	// std::cout << losers << std::endl;
-	std::cout << "main" << std::endl;
-	std::cout << main << std::endl;
-	std::cout << "newMain" << std::endl;
-	std::cout << newMain << std::endl;
-	std::cout << "pending" << std::endl;
-	std::cout << pending << std::endl;
+	std::cout << "size" << std::endl;
+	std::cout << newPairs.size() << std::endl;
 
-	newMain.push_front(pending[0]);
-	pending.pop_front();
 
-	if (!pending.empty())
+	std::deque<unsigned int> res;
+	std::deque<unsigned int> main;
+	std::deque<unsigned int> pending;
+	for (std::size_t i = 0 ; i < newPairs.size() ; ++i)
 	{
-		std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
+		main.push_back(newPairs[i].winner);
+		res.push_back(newPairs[i].winner);
+		pending.push_back(newPairs[i].loser);
+	}
+	if (hasRemainder)
+	{
+		pending.push_back(remainder); 
+	}
+	
+	res.push_front(newPairs[0].loser);
 
-		for (std::size_t i = 0 ; i < order.size() ; ++i)
-		{
-			std::size_t offset = std::min(newMain.size(), order[i]);
-			std::deque<unsigned int>::iterator end = newMain.begin() + offset;
-			if (order[i] < 2)
-				std::cout << "probably major issue........" << std::endl;
-			std::deque<unsigned int>::iterator pos = std::lower_bound(newMain.begin(), end, pending[order[i] - 2]);
+	std::deque<size_t> order = jacobsthal::getOrder(newPairs.size());
+	
+	std::cout << "order" << std::endl;
+	std::cout << order << std::endl;
 
-			newMain.insert(pos, pending[order[i] - 2]);
-		}
+	if (order[0] == 1)
+		order.pop_front();
+
+	while (!order.empty())
+	{
+		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.begin() + order[0], pending[order[0]]);
+		res.insert(pos, pending[order[0]]);
+
+		order.pop_front();
 	}
 
 	if (hasRemainder)
 	{
-		std::deque<unsigned int>::iterator pos = std::lower_bound(newMain.begin(), newMain.end(), remainder);
-		newMain.insert(pos, remainder);
+		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.end(), remainder);
+		res.insert(pos, remainder);
 	}
 
-	std::cout << "newMain2" << std::endl;
-	std::cout << newMain << std::endl;
-	std::cout << "pending2" << std::endl;
+	std::cout << "main" << std::endl;
+	std::cout << main << std::endl;
+	std::cout << "pending" << std::endl;
 	std::cout << pending << std::endl;
+	std::cout << "res" << std::endl;
+	std::cout << res << std::endl;
 
-	std::deque<Pair> tmp;
-	for (std::size_t i = 0 ; i < newMain.size() ; ++i)
-	{
-		Pair p;
-		p.first = newMain[i];
-		p.second = 0;
-		tmp.push_back(p);
-	}
-		// tmp.push_back(std::make_pair(newMain[i], 0));
-
-	return tmp;
+	return res;
 }
 
 // TODO: change to non-void
@@ -484,23 +209,36 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 		return ;
 
 	std::deque<Pair> pairs;
-	for (std::size_t i = 0 ; i < nbs.size() ; ++i)
+	std::size_t size = nbs.size();
+	// bool hasRemainder = false;
+	// unsigned int remainder;
+	if (nbs.size() % 2 != 0)
+	{
+		--size;
+		// hasRemainder = true;
+		// remainder = nbs[size];
+	}
+
+	for (std::size_t i = 0 ; i < size ; i += 2)
 	{
 		Pair p;
-		p.first = nbs[i];
-		p.second = 0;
+		if (nbs[i] > nbs[i + 1])
+		{
+			p.winner = nbs[i];
+			p.loser = nbs[i + 1];
+		}
+		else
+		{
+			p.winner = nbs[i + 1];
+			p.loser = nbs[i];
+		}
 		pairs.push_back(p);
 	}
-		// pairs.push_back(std::make_pair(nbs[i], 0));
 
-	std::deque<Pair> sorted = sortFJ(pairs);
+	std::deque<unsigned int> sorted = sortFJ(pairs);
 
 	std::cout << "\nSORT\nnbs" << std::endl;
 	std::cout << nbs << std::endl;
-
-	nbs.clear();
-	for (std::size_t i = 0 ; i < sorted.size() ; ++i)
-		nbs.push_back(sorted[i].first);
 
 	std::cout << "sorted" << std::endl;
 	std::cout << sorted << std::endl;
@@ -509,6 +247,8 @@ void PmergeMe::sort(std::deque<unsigned int>& nbs)
 template <typename T>
 std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
 {
+	if (nbs.empty())
+		return os;
 	for (std::size_t i = 0 ; i + 1 < nbs.size(); ++i)
 	{
 		os << nbs[i] << ", ";
@@ -531,7 +271,7 @@ std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs)
 {
 	for (std::size_t i = 0 ; i < pairs.size(); ++i)
 	{
-		os << "[" << pairs[i].first << ", " << pairs[i].second << "]" << std::endl;
+		os << "[" << pairs[i].winner << ", " << pairs[i].loser << "]" << std::endl;
 	}
 	return os;
 }

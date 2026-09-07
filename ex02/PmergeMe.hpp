@@ -16,9 +16,8 @@
 
 struct Pair
 {
-	unsigned int first;
-	unsigned int second;
-	std::size_t index;
+	unsigned int winner;
+	unsigned int loser;
 };
 
 class PmergeMe
@@ -36,7 +35,7 @@ class PmergeMe
 
 	private:
 		void	sortPairs(std::deque<Pair>& pairs);
-		std::deque<Pair> sortFJ(std::deque<Pair> pairs);
+		std::deque<unsigned int> sortFJ(const std::deque<Pair>& pairs);
 
 };
 
