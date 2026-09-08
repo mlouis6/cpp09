@@ -51,8 +51,8 @@ namespace jacobsthal
 		std::deque<std::size_t> j_order;
 		std::size_t j_prev = 1;
 
-		if (size > 1)
-			j_order.push_back(1);
+		// if (size > 1)
+		// 	j_order.push_back(1);
 
 		for (std::size_t i = 3 ;  ; ++i)
 		{	
@@ -147,6 +147,27 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 
 	std::deque<unsigned int> pairs2 = sortFJ(newPairs);
 
+	/*** */
+	std::deque<Pair> sortedPairs;
+
+	for (std::size_t i = 0; i < pairs2.size(); ++i)
+	{
+		for (std::size_t j = 0; j < pairs.size(); ++j)
+		{
+			if (pairs[j].winner == pairs2[i])
+			{
+				sortedPairs.push_back(pairs[j]);
+				break;
+			}
+		}
+	}
+	std::cout << "sortedPairs" << std::endl;
+
+	for (std::size_t i = 0; i < sortedPairs.size(); ++i)
+		std::cout << "[" << sortedPairs[i].winner
+				<< ", " << sortedPairs[i].loser << "]" << std::endl;
+	/*** */
+
 	std::cout << "pairs" << std::endl;
 	std::cout << pairs << std::endl;
 	std::cout << "newPairs" << std::endl;
@@ -154,36 +175,46 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
 	std::cout << "size" << std::endl;
 	std::cout << newPairs.size() << std::endl;
 
-	std::deque<unsigned int> res;
 	std::deque<unsigned int> main;
 	std::deque<unsigned int> pending;
-	for (std::size_t i = 0 ; i < newPairs.size() ; ++i)
+	for (std::size_t i = 0 ; i < sortedPairs.size() ; ++i)
 	{
-		main.push_back(newPairs[i].winner);
-		res.push_back(newPairs[i].winner);
-		pending.push_back(newPairs[i].loser);
+		main.push_back(sortedPairs[i].winner);
+		// res.push_back(sortedPairs[i].winner);
+		pending.push_back(sortedPairs[i].loser);
 	}
 	if (hasRemainder)
 	{
 		pending.push_back(remainder); 
 	}
 	
-	res.insert(res.begin(), newPairs[0].loser);
+	std::deque<unsigned int> res = main;
 
-	std::deque<size_t> order = jacobsthal::getOrder(newPairs.size());
+	std::deque<std::size_t> winnerPos;
+	for (std::size_t i = 0 ; i < main.size() ; ++i)
+		winnerPos.push_back(i);
+
+	res.insert(res.begin(), sortedPairs[0].loser);
+
+	for (std::size_t i = 0 ; i < winnerPos.size() ; ++i)
+		++winnerPos[i];
+
+	std::deque<size_t> order = jacobsthal::getOrder(pending.size());
 	
 	std::cout << "order" << std::endl;
 	std::cout << order << std::endl;
 
-	if (order[0] == 1)
-		order.pop_front();
+	// if (order[0] == 1)
+	// 	order.pop_front();
 
-	while (!order.empty())
+	for (std::size_t i = 0 ; i < order.size() ; ++i)
 	{
-		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.begin() + order[0], pending[order[0] - 1]);
-		res.insert(pos, pending[order[0]]);
+		std::size_t idx = order[i] - 1;
+		std::deque<unsigned int>::iterator pos = lower_bound(res.begin(), res.begin() + winnerPos[idx], pending[idx]);
+		res.insert(pos, pending[idx]);
 
-		order.pop_front();
+		for (std::size_t j = idx ; j < winnerPos.size() ; ++j)
+			++winnerPos[j];
 	}
 
 	// if (hasRemainder)
