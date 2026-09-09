@@ -1,24 +1,10 @@
 #include "BitcoinExchange.hpp"
+#include <exception>
 
 BitcoinExchange::BitcoinExchange()
 {
 
 }
-
-// BitcoinExchange::BitcoinExchange(const char* filename) : m_filename(filename)
-// {
-
-// }
-
-// BitcoinExchange::BitcoinExchange(BitcoinExchange& other)
-// {
-// 	static_cast<void> (other);
-// }
-
-// BitcoinExchange& BitcoinExchange::operator=(BitcoinExchange& other)
-// {
-// 	static_cast<void> (other);
-// }
 
 BitcoinExchange::~BitcoinExchange()
 {
@@ -69,15 +55,19 @@ bool	BitcoinExchange::checkFirstLine(const std::string& line, const std::string&
 	sub = trim(sub);
 	if (sub != col1)
 	{
-		std::cout << "Error\nFirst column should be '"<< col1 <<"' instead of '" << sub << "'" << std::endl;
-		return false;
+		// std::cout << "Error\nFirst column should be '"<< col1 <<"' instead of '" << sub << "'" << std::endl;
+		// return false;
+		std::string msg = "Error\nFirst column should be '" + col1 + "' instead of '" + sub + "'";
+		throw std::runtime_error(msg);
 	}
 	sub = line.substr(pos + 1);
 	sub = trim(sub);
 	if (sub != col2)
 	{
-		std::cout << "Error\nSecond column should be '" << col2 <<"' instead of '" << sub << "'" << std::endl;
-		return false;
+		// std::cout << "Error\nSecond column should be '" << col2 <<"' instead of '" << sub << "'" << std::endl;
+		// return false;
+		std::string msg = "Error\nSecond column should be '" + col2 + "' instead of '" + sub + "'";
+		throw std::runtime_error(msg);
 	}
 
 	return true;
@@ -92,8 +82,9 @@ bool	BitcoinExchange::checkLine(const std::string& line, const char del, const d
 	sub = trim(sub);
 	if (!checkDate(sub))
 	{
-		std::cout << "Error\nInvalid date: " << sub << std::endl;
-		return false;
+		// std::cout << "Error\nInvalid date: " << sub << std::endl;
+		// return false;
+		throw std::runtime_error("Error\nInvalid date: " + sub);
 	}
 	data.first = sub;
 	sub = line.substr(pos + 1);
@@ -103,8 +94,9 @@ bool	BitcoinExchange::checkLine(const std::string& line, const char del, const d
 	iss >> rate;
 	if (!iss.eof() || iss.fail() || rate < 0 || rate > max)
 	{
-		std::cout << "Error\nInvalid rate: " << sub << std::endl;
-		return false;
+		// std::cout << "Error\nInvalid rate: " << sub << std::endl;
+		// return false;
+		throw std::runtime_error("Error\nInvalid rate: " + sub);
 	}
 	data.second = static_cast<float> (rate);
 	return true;
@@ -118,16 +110,18 @@ int BitcoinExchange::bitcoinCheck(const char* filename)
 	std::ifstream in_data("data.csv");
 	if (in_data.fail())
 	{
-		std::cout << "Error\nCouldn't read the data set" << std::endl;
-		return 1;
+		// std::cout << "Error\nCouldn't read the data set" << std::endl;
+		// return 1;
+		throw std::runtime_error("Error\nCouldn't read the data set");
 	}
 
 	std::string	line;
 	std::getline(in_data, line);
 	if (!checkFirstLine(line, "date", "exchange_rate", ','))
 	{
-		std::cout << "Error\n`data.csv` first line shouldn't be: " << line << std::endl;
-		return 1;
+		// std::cout << "Error\n`data.csv` first line shouldn't be: " << line << std::endl;
+		// return 1;
+		throw std::runtime_error("Error\n`data.csv` first line shouldn't be: " + line);
 	}
 	
 	std::map<std::string, float>	data;
@@ -153,14 +147,20 @@ int BitcoinExchange::bitcoinCheck(const char* filename)
 	
 	if (in.fail())
 	{
-		std::cout << "Error\nCouldn't open file" << std::endl;
-		return 1;
+		// std::cout << "Error\nCouldn't open file" << std::endl;
+		// return 1;
+		throw std::runtime_error("Error\nCouldn't open file");
 	}
 	std::getline(in, line);
 	if (!checkFirstLine(line, "date", "value", '|'))
 	{
-		std::cout << "Error\n`" << filename << "` first line shouldn't be: " << line << std::endl;
-		return 1;
+		// std::cout << "Error\n`" << filename << "` first line shouldn't be: " << line << std::endl;
+		// return 1;
+		std::string tmp1(filename);
+		std::string tmp2(line);
+		// std::string msg = "Error\n`" + filename + "` first line shouldn't be: " + line;
+		std::string msg = "Error\n`" + tmp1 + "` first line shouldn't be: " + tmp2;
+		throw std::runtime_error(msg);
 	}
 	
 	while (std::getline(in, line))

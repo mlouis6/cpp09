@@ -13,7 +13,6 @@ class RPN
 	private:
 		RPN();
 		RPN(RPN& other);
-		// RPN(char* args);
 		RPN& operator=(RPN& other);
 
 		static std::stack<int, std::list<int> >	m_nbs;

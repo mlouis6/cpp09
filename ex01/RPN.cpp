@@ -6,27 +6,7 @@
 #include <cmath>
 #include <exception>
 
-// RPN::RPN(char* args)
-// {
-// 	calculate(args);
-// }
 std::stack<int, std::list<int> >	RPN::m_nbs;
-
-// RPN::RPN()
-// {
-
-// }
-
-// RPN::RPN(RPN& other)
-// {
-// 	static_cast<void> (other);
-// }
-
-// RPN& RPN::operator=(RPN& other)
-// {
-// 	static_cast<void> (other);
-// 	return *this;
-// }
 
 RPN::~RPN()
 {
@@ -44,6 +24,8 @@ int	RPN::calculate(char* args)
 	{
 		if (args[i] == '+' || args[i] == '-' || args[i] == '*' || args[i] == '/')
 		{
+			if (i == 0)
+				throw std::runtime_error("Shouldn't start with an operator");
 			if (m_nbs.size() < 2)
 				throw std::runtime_error("Not enough numbers");
 			y = m_nbs.top();

@@ -1,5 +1,9 @@
 #include "PmergeMe.hpp"
 
+
+// TODO: debug mode
+// TODO: duplicate mode, pmm need to be modify to shuf with double
+
 PmergeMe::PmergeMe()
 {
 
@@ -383,15 +387,6 @@ std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
 
 	return os;
 }
-
-// std::ostream&	operator<<(std::ostream& os, const std::deque<Pending>& pending)
-// {
-// 	for (std::size_t i = 0 ; i < pending.size(); ++i)
-// 	{
-// 		os << pending[i].value << "(" << pending[i].index << ") ";
-// 	}
-// 	return os;
-// }
 
 std::ostream&	operator<<(std::ostream& os, const std::deque<Pair>& pairs)
 {
