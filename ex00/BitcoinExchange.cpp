@@ -1,5 +1,6 @@
 #include "BitcoinExchange.hpp"
 #include <exception>
+#include <cstring>
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -13,7 +14,8 @@ BitcoinExchange::~BitcoinExchange()
 
 bool	BitcoinExchange::checkDate(const std::string& date)
 {
-	struct tm	t = {};
+	struct tm	t;
+	std::memset(&t, 0, sizeof(t));
 	int	y, m, d;
 	std::istringstream iss(date);
 	char del1, del2;
@@ -21,7 +23,12 @@ bool	BitcoinExchange::checkDate(const std::string& date)
 	{
 		return false;
 	}
-	if (del1 != '-' || del2 != '-') // || y < 2008) //TODO: minimum date
+	if (del1 != '-' || del2 != '-')
+	{
+		return false;
+	}
+	char extra;
+	if (iss >> extra)
 	{
 		return false;
 	}
@@ -29,11 +36,15 @@ bool	BitcoinExchange::checkDate(const std::string& date)
 	t.tm_mon = m - 1;
 	t.tm_mday = d;
 	
-	time_t norm = mktime(&t);
-	struct tm *cmp = localtime(&norm);
-	return (cmp->tm_year == y - 1900 &&
-			cmp->tm_mon == m - 1 &&
-			cmp->tm_mday == d);
+	// time_t norm = 
+	mktime(&t);
+	// struct tm *cmp = localtime(&norm);
+	// return (cmp->tm_year == y - 1900 &&
+	// 		cmp->tm_mon == m - 1 &&
+	// 		cmp->tm_mday == d);
+	return (t.tm_year == y - 1900 &&
+			t.tm_mon == m - 1 &&
+			t.tm_mday == d);
 }
 
 std::string	BitcoinExchange::trim(const std::string& str)
@@ -51,12 +62,14 @@ bool	BitcoinExchange::checkFirstLine(const std::string& line, const std::string&
 {
 	size_t	pos = line.find(del);
 
+	if (pos == std::string::npos)
+	{
+		throw std::runtime_error("Error\nMissing delimiter");
+	}
 	std::string sub = line.substr(0, pos );
 	sub = trim(sub);
 	if (sub != col1)
 	{
-		// std::cout << "Error\nFirst column should be '"<< col1 <<"' instead of '" << sub << "'" << std::endl;
-		// return false;
 		std::string msg = "Error\nFirst column should be '" + col1 + "' instead of '" + sub + "'";
 		throw std::runtime_error(msg);
 	}
@@ -64,8 +77,6 @@ bool	BitcoinExchange::checkFirstLine(const std::string& line, const std::string&
 	sub = trim(sub);
 	if (sub != col2)
 	{
-		// std::cout << "Error\nSecond column should be '" << col2 <<"' instead of '" << sub << "'" << std::endl;
-		// return false;
 		std::string msg = "Error\nSecond column should be '" + col2 + "' instead of '" + sub + "'";
 		throw std::runtime_error(msg);
 	}
@@ -82,9 +93,9 @@ bool	BitcoinExchange::checkLine(const std::string& line, const char del, const d
 	sub = trim(sub);
 	if (!checkDate(sub))
 	{
-		// std::cout << "Error\nInvalid date: " << sub << std::endl;
-		// return false;
-		throw std::runtime_error("Error\nInvalid date: " + sub);
+		std::cout << "Error\nInvalid date: " << sub << std::endl;
+		return false;
+		// throw std::runtime_error("Error\nInvalid date: " + sub);
 	}
 	data.first = sub;
 	sub = line.substr(pos + 1);
@@ -94,24 +105,19 @@ bool	BitcoinExchange::checkLine(const std::string& line, const char del, const d
 	iss >> rate;
 	if (!iss.eof() || iss.fail() || rate < 0 || rate > max)
 	{
-		// std::cout << "Error\nInvalid rate: " << sub << std::endl;
-		// return false;
-		throw std::runtime_error("Error\nInvalid rate: " + sub);
+		std::cout << "Error\nInvalid rate: " << sub << std::endl;
+		return false;
+		// throw std::runtime_error("Error\nInvalid rate: " + sub);
 	}
 	data.second = static_cast<float> (rate);
 	return true;
 }
 
-
-// TODO: refacto
-// TODO: use exception
 int BitcoinExchange::bitcoinCheck(const char* filename)
 {
 	std::ifstream in_data("data.csv");
 	if (in_data.fail())
 	{
-		// std::cout << "Error\nCouldn't read the data set" << std::endl;
-		// return 1;
 		throw std::runtime_error("Error\nCouldn't read the data set");
 	}
 
@@ -119,8 +125,6 @@ int BitcoinExchange::bitcoinCheck(const char* filename)
 	std::getline(in_data, line);
 	if (!checkFirstLine(line, "date", "exchange_rate", ','))
 	{
-		// std::cout << "Error\n`data.csv` first line shouldn't be: " << line << std::endl;
-		// return 1;
 		throw std::runtime_error("Error\n`data.csv` first line shouldn't be: " + line);
 	}
 	
@@ -132,7 +136,6 @@ int BitcoinExchange::bitcoinCheck(const char* filename)
 		{
 			return 1;
 		}
-		// TODO: check double
 		std::map<std::string, float>::const_iterator it = data.find(ret.first);
 		if (it != data.end())
 		{
@@ -147,19 +150,12 @@ int BitcoinExchange::bitcoinCheck(const char* filename)
 	
 	if (in.fail())
 	{
-		// std::cout << "Error\nCouldn't open file" << std::endl;
-		// return 1;
 		throw std::runtime_error("Error\nCouldn't open file");
 	}
 	std::getline(in, line);
 	if (!checkFirstLine(line, "date", "value", '|'))
 	{
-		// std::cout << "Error\n`" << filename << "` first line shouldn't be: " << line << std::endl;
-		// return 1;
-		std::string tmp1(filename);
-		std::string tmp2(line);
-		// std::string msg = "Error\n`" + filename + "` first line shouldn't be: " + line;
-		std::string msg = "Error\n`" + tmp1 + "` first line shouldn't be: " + tmp2;
+		std::string msg = "Error\n`" + std::string(filename) + "` first line shouldn't be: " + std::string(line);
 		throw std::runtime_error(msg);
 	}
 	

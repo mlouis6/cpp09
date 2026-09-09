@@ -26,7 +26,6 @@ class BitcoinExchange
 		static bool	checkFirstLine(const std::string& line, const std::string& col1, const std::string& col2, const char del);
 		static bool	checkLine(const std::string& line, const char del, const double max, pair& data);
 		
-		// const char*	m_filename;
 		BitcoinExchange(BitcoinExchange& other);
 		BitcoinExchange& operator=(BitcoinExchange& other);
 		BitcoinExchange();
