@@ -112,9 +112,9 @@ std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 }
 
 
-// std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<Pair>& pairs)
+// std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& nbs)
 // {
-// 	if (pairs.size() <= 1)
+// 	if (nbs.size() <= 1)
 // 	{
 // 		std::deque<unsigned int> ret;
 // 		for (std::size_t i = 0 ; i < pairs.size() ; ++i)
@@ -237,113 +237,111 @@ std::deque<unsigned int> PmergeMe::init(char **args, int nb_args)
 // 	return res;
 // }
 
-std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& values)
+
+std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& nbs)
 {
-    if (values.size() <= 1)
-        return values;
+	if (nbs.size() <= 1)
+		return nbs;
 
-    std::size_t n = values.size();
-    bool hasRemainder = false;
-    unsigned int remainder = 0;
-    if (n % 2 != 0)
-    {
-        hasRemainder = true;
-        remainder = values[n - 1];
-        --n;
-    }
-
-    std::deque<Pair> pairs;
-    for (std::size_t i = 0; i < n; i += 2)
-    {
-        Pair p;
-        if (values[i] > values[i + 1])
-        { p.winner = values[i];     p.loser = values[i + 1]; }
-        else
-        { p.winner = values[i + 1]; p.loser = values[i]; }
-        pairs.push_back(p);
-    }
-
-    // recurse on plain winner values only
-    std::deque<unsigned int> winners;
-    for (std::size_t i = 0; i < pairs.size(); ++i)
+	std::size_t size = nbs.size();
+	bool hasRemainder = false;
+	unsigned int remainder;
+	if (size % 2 != 0)
 	{
-        winners.push_back(pairs[i].winner);
+		--size;
+		hasRemainder = true;
+		remainder = nbs[size];
 	}
 
-	
+	std::deque<Pair> pairs;
+	std::deque<unsigned int> winners;
+	for (std::size_t i = 0 ; i < size ; i += 2)
+	{
+		Pair p;
+		if (nbs[i] > nbs[i + 1])
+		{
+			p.winner = nbs[i];
+			p.loser = nbs[i + 1];
+		}
+		else
+		{
+			p.winner = nbs[i + 1];
+			p.loser = nbs[i];
+		}
+		pairs.push_back(p);
+		winners.push_back(p.winner);
+	}
+
 	std::cout << "pairsBEFORE" << std::endl;
 	std::cout << pairs << std::endl;
 	std::cout << "winnersBEFORE" << std::endl;
 	std::cout << winners << std::endl;
 
-    std::deque<unsigned int> mainChain = sortFJ(winners); // fully sorted, same length as pairs
+	std::deque<unsigned int> main = sortFJ(winners);
 
 	std::cout << "pairs" << std::endl;
 	std::cout << pairs << std::endl;
 	std::cout << "winners" << std::endl;
 	std::cout << winners << std::endl;
-	// std::cout << "mainChain" << std::endl;
-	// std::cout << mainChain << std::endl;
 
-    // reattach each winner's own loser, freshly, from THIS level's pairs
-    std::deque<unsigned int> pending;
-    for (std::size_t i = 0; i < mainChain.size(); ++i)
-    {
-        for (std::size_t j = 0; j < pairs.size(); ++j)
-        {
-            if (pairs[j].winner == mainChain[i])
-            {
-                pending.push_back(pairs[j].loser);
-                break;
-            }
-        }
-    }
-    if (hasRemainder)
-        pending.push_back(remainder);
+	std::deque<unsigned int> pending;
+	//? find???
+	// TODO: maybe find
+	for (std::size_t i = 0 ; i < main.size() ; ++i)
+	{
+		for (std::size_t j = 0 ; j < pairs.size() ; ++j)
+		{
+			if (pairs[j].winner == main[i])
+			{
+				pending.push_back(pairs[j].loser);
+				break ;
+			}
+		}
+	}
+	if (hasRemainder)
+	{
+		pending.push_back(remainder); 
+	}
 
-    std::deque<unsigned int> res = mainChain;
-
-	res.insert(res.begin(), pending[0]);
-
-	// track where each mainChain[k] currently sits inside res
 	std::deque<std::size_t> winnerPos;
-	for (std::size_t i = 0; i < mainChain.size(); ++i)
-		winnerPos.push_back(i + 1); // +1 because pending[0] was just inserted at index 0
+	for (std::size_t i = 0 ; i < main.size() ; ++i)
+		winnerPos.push_back(i);
 
-	std::deque<std::size_t> order = jacobsthal::getOrder(pending.size());
+	main.insert(main.begin(), pending[0]);
+
+	for (std::size_t i = 0 ; i < winnerPos.size() ; ++i)
+		++winnerPos[i];
+
+	std::deque<size_t> order = jacobsthal::getOrder(pending.size());
+	
 	std::cout << "order" << std::endl;
 	std::cout << order << std::endl;
 
-	for (std::size_t i = 0; i < order.size(); ++i)
+	for (std::size_t i = 0 ; i < order.size() ; ++i)
 	{
-		std::size_t k = order[i] - 1; // 0-indexed
-		if (k == 0)
-			continue; // already inserted above
+		std::size_t idx = order[i] - 1;
+		std::deque<unsigned int>::iterator end;
+		if (hasRemainder && idx == pending.size() - 1)
+			end = main.end();
+		else
+			end = main.begin() + winnerPos[idx];
+		std::deque<unsigned int>::iterator pos = lower_bound(main.begin(), end, pending[idx]);
 		
-		bool isRemainderSlot = hasRemainder && (k == pending.size() - 1);
-		std::deque<unsigned int>::iterator upper =
-			isRemainderSlot ? res.end() : (res.begin() + winnerPos[k]);
+		for (std::size_t j = 0 ; j < winnerPos.size() ; ++j)
+		{
+			if (winnerPos[j] >= static_cast<std::size_t>(pos - main.begin()))
+				++winnerPos[j];
+		}
+		main.insert(pos, pending[idx]);
 
-		// pending[k] is guaranteed < mainChain[k], so bound the search there
-		std::deque<unsigned int>::iterator pos =
-				std::lower_bound(res.begin(), upper, pending[k]);
-
-			std::size_t insertIndex = pos - res.begin();
-			res.insert(pos, pending[k]);
-
-			for (std::size_t j = 0; j < winnerPos.size(); ++j)
-				if (winnerPos[j] >= insertIndex)
-					++winnerPos[j];
 	}
 
-	std::cout << "mainChain" << std::endl;
-	std::cout << mainChain << std::endl;
+	std::cout << "main" << std::endl;
+	std::cout << main << std::endl;
 	std::cout << "pending" << std::endl;
 	std::cout << pending << std::endl;
-	std::cout << "res" << std::endl;
-	std::cout << res << std::endl;
 
-    return res;
+	return main;
 }
 
 // TODO: change to non-void
