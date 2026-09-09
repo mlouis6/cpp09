@@ -35,7 +35,8 @@ class PmergeMe
 
 	private:
 		void	sortPairs(std::deque<Pair>& pairs);
-		std::deque<unsigned int> sortFJ(const std::deque<Pair>& pairs);
+		// std::deque<unsigned int> sortFJ(const std::deque<Pair>& pairs);
+		std::deque<unsigned int> sortFJ(const std::deque<unsigned int>& pairs);
 };
 
 template <typename T>
