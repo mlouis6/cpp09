@@ -52,14 +52,53 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	std::vector<unsigned int> sure;
+	sure = nbs_v;
+	std::sort(sure.begin(),sure.end());
+
+	/** std::deque */
 	std::cout << "DEQUE" << std::endl;
+	std::cout << "Before: " << nbs_d << std::endl;
+
 	unsigned long base_d = timer::start();
-	pmerge.sort(nbs_d);
-	std::cout << timer::stop(base_d) << "us" << std::endl;
+	std::deque<unsigned int> sorted_d = pmerge.sort(nbs_d);
+	unsigned long stop_d = timer::stop(base_d);
+
+	std::cout << "After: " << sorted_d << std::endl;
+	std::cout << "Time: " << stop_d << "us" << std::endl;
+
+	bool isSorted = true;
+	for (std::size_t i = 0 ; i < sure.size() ; ++i)
+	{
+		if (sure[i] != sorted_d[i])
+		{
+			isSorted = false;
+			break ;
+		}
+	}
+	std::cout << std::boolalpha << "Check sorted: " << isSorted << std::endl;
 	
+	/** std::vector */
 	std::cout << "\nVECTOR" << std::endl;
+	std::cout << "Before: " << nbs_v << std::endl;
+
 	unsigned long base_v = timer::start();
-	pmerge.sort(nbs_v);
-	std::cout << timer::stop(base_v) << "us" << std::endl;
+	std::vector<unsigned int> sorted_v = pmerge.sort(nbs_v);
+	unsigned long stop_v = timer::stop(base_v);
+
+	std::cout << "After: " << sorted_v << std::endl;
+	std::cout << "Time: " << stop_v << "us" << std::endl;
+	isSorted = true;
+
+	for (std::size_t i = 0 ; i < sure.size() ; ++i)
+	{
+		if (sure[i] != sorted_v[i])
+		{
+			isSorted = false;
+			break ;
+		}
+	}
+	std::cout << std::boolalpha << "Check sorted: " << isSorted << std::endl;
+
 	return 0;
 }

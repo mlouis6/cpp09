@@ -122,7 +122,7 @@ std::deque<unsigned int> PmergeMe::initD(char **args, int nb_args)
 	return nbs;
 }
 
-std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& nbs)
+std::deque<unsigned int> PmergeMe::sort(const std::deque<unsigned int>& nbs)
 {
 	if (nbs.size() <= 1)
 		return nbs;
@@ -161,7 +161,7 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& nbs)
 	// std::cout << "winnersBEFORE" << std::endl;
 	// std::cout << winners << std::endl;
 
-	std::deque<unsigned int> main = sortFJ(winners);
+	std::deque<unsigned int> main = sort(winners);
 
 	// std::cout << "pairs" << std::endl;
 	// std::cout << pairs << std::endl;
@@ -226,33 +226,6 @@ std::deque<unsigned int> PmergeMe::sortFJ(const std::deque<unsigned int>& nbs)
 	return main;
 }
 
-void PmergeMe::sort(std::deque<unsigned int>& nbs)
-{
-	// std::cout << "BEFORE" << std::endl;
-	// std::cout << nbs << std::endl;
-	std::deque<unsigned int> sorted = sortFJ(nbs);
-
-	std::cout << "\nSORT\nnbs" << std::endl;
-	std::cout << nbs << std::endl;
-
-	std::cout << "sorted" << std::endl;
-	std::cout << sorted << std::endl;
-
-	std::deque<unsigned int> sure;
-	sure = nbs;
-	std::sort(sure.begin(),sure.end());
-	bool isSorted = true;
-	for (std::size_t i = 0 ; i < sure.size() ; ++i)
-	{
-		if (sure[i] != sorted[i])
-		{
-			isSorted = false;
-			break ;
-		}
-	}
-	std::cout << std::boolalpha << "check sorted: " << isSorted << std::endl;
-}
-
 /** VECTOR */
 
 std::vector<unsigned int> PmergeMe::initV(char **args, int nb_args)
@@ -289,7 +262,7 @@ std::vector<unsigned int> PmergeMe::initV(char **args, int nb_args)
 	return nbs;
 }
 
-std::vector<unsigned int> PmergeMe::sortFJ(const std::vector<unsigned int>& nbs)
+std::vector<unsigned int> PmergeMe::sort(const std::vector<unsigned int>& nbs)
 {
 	if (nbs.size() <= 1)
 		return nbs;
@@ -328,7 +301,7 @@ std::vector<unsigned int> PmergeMe::sortFJ(const std::vector<unsigned int>& nbs)
 	// std::cout << "winnersBEFORE" << std::endl;
 	// std::cout << winners << std::endl;
 
-	std::vector<unsigned int> main = sortFJ(winners);
+	std::vector<unsigned int> main = sort(winners);
 
 	// std::cout << "pairs" << std::endl;
 	// std::cout << pairs << std::endl;
@@ -393,37 +366,9 @@ std::vector<unsigned int> PmergeMe::sortFJ(const std::vector<unsigned int>& nbs)
 	return main;
 }
 
-void PmergeMe::sort(std::vector<unsigned int>& nbs)
-{
-	// std::cout << "BEFORE" << std::endl;
-	// std::cout << nbs << std::endl;
-	std::vector<unsigned int> sorted = sortFJ(nbs);
-
-	std::cout << "\nSORT\nnbs" << std::endl;
-	std::cout << nbs << std::endl;
-
-	std::cout << "sorted" << std::endl;
-	std::cout << sorted << std::endl;
-
-	std::vector<unsigned int> sure;
-	sure = nbs;
-	std::sort(sure.begin(),sure.end());
-	bool isSorted = true;
-	for (std::size_t i = 0 ; i < sure.size() ; ++i)
-	{
-		if (sure[i] != sorted[i])
-		{
-			isSorted = false;
-			break ;
-		}
-	}
-	std::cout << std::boolalpha << "check sorted: " << isSorted << std::endl;
-}
-
 /** PRINT */
 
-template<typename T>
-std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
+std::ostream&	operator<<(std::ostream& os, const std::deque<unsigned int>& nbs)
 {
 	if (nbs.empty())
 		return os;
@@ -436,8 +381,33 @@ std::ostream&	operator<<(std::ostream& os, const std::deque<T>& nbs)
 	return os;
 }
 
-template<typename T>
-std::ostream&	operator<<(std::ostream& os, const std::vector<T>& nbs)
+std::ostream&	operator<<(std::ostream& os, const std::vector<unsigned int>& nbs)
+{
+	if (nbs.empty())
+		return os;
+	for (std::size_t i = 0 ; i + 1 < nbs.size(); ++i)
+	{
+		os << nbs[i] << ", ";
+	}
+	os << nbs[nbs.size() - 1];
+
+	return os;
+}
+
+std::ostream&	operator<<(std::ostream& os, const std::deque<std::size_t>& nbs)
+{
+	if (nbs.empty())
+		return os;
+	for (std::size_t i = 0 ; i + 1 < nbs.size(); ++i)
+	{
+		os << nbs[i] << ", ";
+	}
+	os << nbs[nbs.size() - 1];
+
+	return os;
+}
+
+std::ostream&	operator<<(std::ostream& os, const std::vector<std::size_t>& nbs)
 {
 	if (nbs.empty())
 		return os;

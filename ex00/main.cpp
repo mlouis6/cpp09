@@ -6,7 +6,7 @@ int main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
-		std::cout << "Error\nUse `./btc filename`" << std::endl;
+		std::cout << "Error: Use `./btc filename`" << std::endl;
 		return 1;
 	}
 	try
